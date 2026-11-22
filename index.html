@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RIMOB | Retorno de Investimento Imobiliário</title>
+<style>
+:root{--navy:#17365d;--blue:#1f4e78;--pale:#fff2cc;--green:#e2f0d9;--red:#fce4d6;--bg:#f3f6f9;--text:#243244;--muted:#637487}
+*{box-sizing:border-box}html,body{width:100%;max-width:100%;overflow-x:hidden}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 Arial,Helvetica,sans-serif}
+header{background:linear-gradient(120deg,var(--navy),var(--blue));color:white;padding:26px max(20px,calc((100% - 1280px)/2))}
+header .header-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+header .header-copy{min-width:0}header h1{margin:0 0 7px;font-size:clamp(24px,3vw,34px)}header p{margin:0;opacity:.9;max-width:900px}
+header .logout-button{flex:0 0 auto;background:#fff;color:var(--navy);border:1px solid #ffffff80;padding:9px 14px;margin-top:2px}
+header .logout-button:hover{background:#edf2f7}
+@media(max-width:560px){header .header-inner{align-items:flex-start;gap:12px}header .header-copy{flex:1}header .logout-button{font-size:12px;padding:8px 10px}}
+main{width:100%;max-width:1280px;margin:22px auto;padding:0 18px 40px}.layout{display:grid;grid-template-columns:minmax(300px,360px) minmax(0,1fr);gap:18px;align-items:start}.layout>*,.panel{min-width:0}
+.panel{background:white;border:1px solid #dce4ec;border-radius:12px;padding:18px;box-shadow:0 3px 12px #20354b0b}.panel h2{font-size:18px;margin:0 0 14px;color:var(--navy)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.part4-percent{grid-column:1}.part4-calculated{grid-column:2}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted);font-weight:bold}
+input,select{width:100%;border:1px solid #cbd6e0;border-radius:7px;padding:10px;font:inherit;background:#fff;color:var(--text)}input[readonly]{background:#eef3f7;color:var(--navy);font-weight:bold}input:focus{outline:2px solid #8db9df;border-color:var(--blue)}
+.actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}button{border:0;border-radius:7px;padding:10px 13px;font-weight:bold;cursor:pointer}button.primary{background:var(--blue);color:white}button.secondary{background:#e9eef3;color:var(--navy)}
+.dynamic-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.dynamic-grid .field{display:flex;flex-direction:column;gap:5px}.dynamic-grid label{font-size:12px;color:var(--muted);font-weight:bold}.dynamic-grid input,.dynamic-grid select{width:100%;border:1px solid #cbd6e0;border-radius:7px;padding:10px;font:inherit;background:#fff;color:var(--text)}.dynamic-grid input[readonly]{background:#eef3f7;font-weight:bold;color:var(--navy)}.dynamic-help{font-size:12px;color:var(--muted);margin:8px 0 0}.dynamic-status{font-size:13px;font-weight:bold;color:var(--navy);margin-top:10px}.results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.metric{border:1px solid #dce4ec;border-radius:10px;padding:14px;background:white;min-height:110px}.metric .label{font-size:12px;color:var(--muted);font-weight:bold}.metric .value{font-size:22px;font-weight:bold;color:var(--navy);margin:7px 0}.metric .note{font-size:12px;color:var(--muted)}
+.metric.good{background:var(--green)}.metric.bad{background:var(--red)}.section{margin-top:18px}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:right;padding:10px;border-bottom:1px solid #e2e8ef;white-space:nowrap}th{background:#edf2f7;color:var(--navy)}th:first-child,td:first-child{text-align:left}
+.noteBox{background:#f6f8fa;border-left:4px solid var(--blue);padding:12px 14px;font-size:13px;color:#4d5c6c;border-radius:5px}
+footer{color:var(--muted);font-size:12px;margin-top:18px}a{color:var(--blue)}.small{font-size:12px;color:var(--muted)}
+.print-header,.print-note{display:none}
+.report-meta{display:none}.report-meta dl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0}.report-meta .meta-item{border-bottom:1px solid #e2e8ef;padding:5px 0}.report-meta dt{font-size:11px;color:var(--muted);font-weight:bold}.report-meta dd{margin:2px 0 0;font-size:13px;overflow-wrap:anywhere}
+.archive-list{display:grid;gap:8px}
+.archive-item{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #e2e8ef;padding:10px 0}
+.archive-item-info{min-width:0;overflow-wrap:anywhere}
+.archive-item-actions{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.archive-item button{white-space:nowrap}
+.save-state{align-self:center;font-size:12px;color:var(--muted)}.save-state.dirty{color:#a35a00;font-weight:bold}
+.modal-overlay{position:fixed;inset:0;background:#10203366;display:flex;align-items:center;justify-content:center;padding:18px;z-index:1000}
+.modal-box{background:#fff;border-radius:12px;max-width:460px;width:100%;padding:22px;box-shadow:0 10px 40px #0004}.modal-box h3{margin:0 0 8px;color:var(--navy);font-size:18px}.modal-box p{margin:0 0 16px}
+.modal-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.modal-actions button:focus-visible{outline:3px solid #8db9df;outline-offset:2px}
+button.danger{background:#fde8e7;color:#a32121;border:1px solid #f3c5c2}
+button.danger:hover{background:#fbd8d5}
+button.danger:focus-visible,button.secondary:focus-visible{outline:3px solid #8db9df;outline-offset:2px}
+@media(max-width:560px){.archive-item{align-items:flex-start;flex-direction:column}.archive-item-actions{width:100%}.archive-item-actions button{flex:1}}
+/* Layout em tela: coluna de resultados alinhada ao topo do formulário, com espaçamento único (18px) entre todos os cards */
+@media screen{
+.main-column{display:grid;gap:18px;align-content:start;min-width:0}
+.main-column>.section{margin-top:0}
+.results{gap:18px}
+th{white-space:normal;vertical-align:bottom;line-height:1.25;padding:10px 8px}td{padding:10px 8px}
+}
+@media(max-width:1100px){.results{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}main{padding:0 14px 32px}}
+@media(max-width:620px){.results,.dynamic-grid{grid-template-columns:minmax(0,1fr)}.fields{grid-template-columns:1fr}.part4-percent,.part4-calculated{grid-column:auto}}
+@media print{
+  @page{size:A4;margin:14mm 13mm 15mm}
+  html,body{width:auto;max-width:none;overflow:visible;background:#fff;color:#243244;font-size:10.5px;line-height:1.35}
+  body{margin:0}
+  header{display:none!important}
+  .print-header{display:block!important;margin:0 0 14px;padding:0 0 9px;border-bottom:1px solid #d9e0e7;color:#243244}
+  .print-title{font-size:12px;font-weight:600;letter-spacing:.1px;color:#33465b;margin-bottom:7px}
+  .print-property{font-size:13px;font-weight:700;margin-bottom:2px}
+  .print-address{font-size:10.5px;color:#536273;margin-bottom:3px}
+  .print-buyer{font-size:10.5px;color:#536273}
+  .print-date{font-size:9px;color:#7b8794;margin-top:5px}
+  main{width:100%;max-width:none;margin:0;padding:0}
+  .layout{display:block!important}
+  .panel.inputs,.archive-panel,.source-panel,footer,#dynamicAnalysis{display:none!important}
+  .report-meta{display:none!important}
+  .results{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .panel,.metric{box-shadow:none;border:1px solid #e0e5eb;border-radius:4px;padding:8px;break-inside:avoid}
+  .metric{min-height:0}
+  .metric .label{font-size:9px}
+  .metric .value{font-size:15px;margin:4px 0}
+  .metric .note{font-size:9px}
+  .section{margin-top:9px}
+  .panel h2{font-size:12px;margin:0 0 7px;color:#33465b}
+  table{font-size:9px}
+  th,td{padding:4px 5px;white-space:normal}
+  th{background:#f1f4f7!important;color:#33465b}
+  .tablewrap{overflow:visible}
+  .noteBox{background:#f7f8fa!important;border-left:2px solid #9aa9b8;padding:8px;font-size:9px}
+  .print-note{display:block!important;margin-top:13px;padding-top:8px;border-top:1px solid #e0e5eb;color:#697586;font-size:8.5px;line-height:1.35;break-inside:avoid}
+  button,.modal-overlay{display:none!important}
+}
+/* iPad Web authentication gate */
+#appShell.auth-locked{visibility:hidden;pointer-events:none}
+#rimobAuthGate{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;padding:18px;background:linear-gradient(135deg,#122c4a,#1f4e78);font-family:Arial,Helvetica,sans-serif;overflow:auto}
+#rimobAuthGate[hidden]{display:none!important}
+.rimob-auth-card{width:min(100%,440px);background:#fff;border-radius:16px;padding:24px;box-shadow:0 18px 55px #07182a55;color:#243244}
+.rimob-auth-brand{font-weight:800;letter-spacing:.5px;font-size:27px;color:#17365d;margin-bottom:3px}.rimob-auth-sub{font-size:13px;color:#637487;margin-bottom:20px}
+.rimob-auth-card h2{margin:0 0 14px;color:#17365d;font-size:19px}.rimob-auth-field{display:flex;flex-direction:column;gap:6px;margin:12px 0}.rimob-auth-field label{font-size:12px;font-weight:bold;color:#637487}.rimob-auth-field input{min-height:46px;font-size:16px;border:1px solid #cbd6e0;border-radius:8px;padding:12px;box-sizing:border-box;width:100%}
+.rimob-auth-actions{display:grid;gap:9px;margin-top:16px}.rimob-auth-actions button{min-height:46px;font-size:15px}.rimob-auth-secondary{background:#e9eef3;color:#17365d}.rimob-auth-message{min-height:22px;font-size:13px;margin-top:12px;color:#17365d;white-space:pre-wrap}.rimob-auth-message.error{color:#a32121}.rimob-auth-message.success{color:#26723b}.rimob-auth-hint{font-size:11px;color:#637487;margin-top:14px;line-height:1.4}
+@media(max-width:560px){.rimob-auth-card{padding:20px;border-radius:12px}.rimob-auth-brand{font-size:24px}}
+</style></head>
+<body>
+<div class="print-header" id="printHeader">
+  <div class="print-title">Estimativa de Retorno de Investimento em Imóvel</div>
+  <div class="print-property" id="printProperty"></div>
+  <div class="print-address" id="printAddress"></div>
+  <div class="print-buyer" id="printBuyer"></div>
+  <div class="print-date" id="printDate"></div>
+</div>
+<div id="appShell" class="auth-locked"><header><div class="header-inner"><div class="header-copy"><h1>RIMOB | Retorno de Investimento Imobiliário</h1><p>Simule a compra de um imóvel para locação, estime o fluxo de caixa, a valorização e compare o resultado com uma aplicação financeira alternativa. Todos os valores iniciais são ilustrativos e editáveis. Preencha os dados do cliente, analista e imóvel, e selecione a forma de pagamento no campo correspondente.</p></div><button id="logoutButton" class="logout-button" type="button" title="Encerrar sessão">Sair&nbsp; ↪</button></div></header>
+<main>
+<div class="layout">
+<section class="panel inputs"><div class="actions" style="margin-top:0;margin-bottom:14px"><button class="secondary" id="newAnalysis" type="button" onclick="newAnalysis()">Nova Análise</button><button class="primary" type="button" data-save>Salvar</button></div><p id="newAnalysisStatus" class="small" aria-live="polite"></p><h2>Premissas do investimento</h2><div class="fields" id="fields"></div>
+<p class="small">ITBI/ITIV, escritura e registro são estimados pelos percentuais editáveis acima. Os percentuais iniciais são referências de simulação, não tarifas oficiais: confirme as alíquotas e tabelas aplicáveis ao município, ao imóvel e ao cartório.</p><div class="actions"><button class="primary" type="button" data-save>Salvar</button><button class="secondary" id="print" type="button">Gerar PDF</button><span class="save-state" id="saveState" aria-live="polite"></span></div>
+<p class="small">IRPF do aluguel: informe outras rendas tributáveis mensais do locador antes do aluguel. O cálculo é uma estimativa baseada na tabela mensal do IRPF correspondente ao ano da data da análise (<span id="irpfTableInfo"></span>) e deve ser conferido na apuração fiscal individual, inclusive no Carnê-Leão e na declaração anual.</p></section>
+<section class="main-column">
+<div class="panel report-meta section" id="reportMeta"><h2>Identificação da análise</h2><dl id="reportMetaContent"></dl></div>
+<div class="panel section" id="dynamicAnalysis"><h2>Simulador dinâmico de aquisição</h2><p class="small">Informe o aluguel mensal alvo e a TIR anual desejada. O RIMOB calcula o preço máximo de compra e atualiza automaticamente o formulário e todas as projeções. Deixe as duas premissas em zero para restaurar o preço informado manualmente no formulário.</p><div class="dynamic-grid"><div class="field"><label for="dynamicRent">Aluguel mensal alvo (R$)</label><input id="dynamicRent" type="number" min="0" step="50" value="0" placeholder="0,00"></div><div class="field"><label for="dynamicTir">TIR desejada (% a.a.)</label><input id="dynamicTir" type="number" min="0" max="100" step="0.1" value="0" placeholder="0,00"></div><div class="field"><label for="dynamicPrice">Preço máximo de compra calculado (R$)</label><input id="dynamicPrice" type="text" readonly value="0,00" aria-label="Preço máximo de compra calculado automaticamente"></div></div><div id="dynamicStatus" class="dynamic-status" aria-live="polite"></div><p class="dynamic-help">O preço máximo é o maior preço de compra com o qual a TIR anual estimada do investimento atinge a TIR desejada, considerando todas as premissas do formulário: aluguel, despesas, IRPF, valorização, horizonte, financiamento e custos de venda. Por depender da valorização e do prazo informados, revise essas premissas. ITBI/ITIV, escritura e registro são recalculados automaticamente a partir do novo preço. As despesas percentuais da locação também são convertidas em valores mensais estimados conforme o aluguel vigente.</p></div><div class="results" id="results"></div>
+<div class="panel section"><h2>Comparação no horizonte escolhido</h2><div class="tablewrap"><table id="comparison"></table></div></div>
+<div class="panel section"><h2>Fluxo de caixa anual estimado</h2><div class="tablewrap"><table id="cashflow"></table></div></div>
+<div class="panel section"><h2>Sensibilidade do aluguel mensal</h2><p class="small">Análise de sensibilidade do resultado para diferentes valores de aluguel mensal, calculados a partir da premissa informada. Compare as faixas apresentadas com imóveis de características semelhantes na região.</p><div class="tablewrap"><table id="rentSensitivity"></table></div></div>
+<div class="panel section"><h2>Sensibilidade de valorização</h2><div class="tablewrap"><table id="sensitivity"></table></div></div>
+<div class="panel section"><h2>Interpretação e pontos de atenção</h2><div id="interpretation" class="noteBox"></div></div>
+</section></div>
+<div class="print-note" id="printNote">Observação: Os valores e resultados apresentados constituem estimativas elaboradas com base nas informações e premissas consideradas nesta simulação. Os resultados efetivos poderão variar ao longo do tempo em função das condições econômicas, financeiras, tributárias e do mercado imobiliário, bem como das características específicas da operação. Esta simulação tem finalidade informativa e de apoio à avaliação da oportunidade de investimento, não representando garantia de rentabilidade ou valorização futura.</div>
+<div class="panel section archive-panel"><h2>Análises armazenadas neste navegador</h2><p class="small">Os registros ficam salvos localmente neste navegador e neste computador. Eles não são enviados a um servidor nem sincronizados com outros dispositivos.</p><div id="archiveList" class="archive-list"></div></div>
+<div class="panel section source-panel"><h2>Fontes para validação das premissas</h2>
+<ul><li><a href="https://www.fipe.org.br/pt-br/indices/fipezap/" target="_blank" rel="noopener">FipeZAP</a>: referências de preços anunciados de venda e locação.</li>
+<li><a href="https://www.ibge.gov.br/explica/inflacao.php" target="_blank" rel="noopener">IBGE / IPCA</a>: inflação oficial.</li>
+<li><a href="https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas" target="_blank" rel="noopener">Receita Federal: tabelas mensais do IRPF</a>, incluindo redução do imposto.</li><li><a href="https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/pagamento/carne-leao/rendimentos" target="_blank" rel="noopener">Receita Federal: Carnê-Leão e deduções de aluguel</a>.</li></ul>
+<p class="small">Os percentuais iniciais de ITBI/ITIV, escritura e registro são parâmetros de referência editáveis e não substituem consulta à prefeitura e ao cartório competente. Os resultados são estimativas financeiras calculadas com base nas premissas informadas e têm finalidade de apoio à decisão. Não constituem laudo formal de avaliação imobiliária nem garantia de rentabilidade. A tributação depende das condições específicas do contribuinte, e os valores futuros de aluguel, ocupação e valorização estão sujeitos às condições de mercado.</p></div>
+<footer>Ferramenta independente e offline. Pode ser aberta diretamente no navegador atualizado, sem instalação e sem conexão com planilhas.</footer>
+</main></div>
+<div id="rimobAuthGate" role="dialog" aria-modal="true" aria-labelledby="rimobAuthTitle">
+ <div class="rimob-auth-card">
+  <div class="rimob-auth-brand">RIMOB</div><div class="rimob-auth-sub">Retorno de Investimento Imobiliário</div>
+  <h2 id="rimobAuthTitle">Acesso à sua calculadora</h2>
+  <form id="rimobLoginForm">
+   <div class="rimob-auth-field"><label for="rimobEmail">E-mail</label><input id="rimobEmail" type="email" autocomplete="username" required inputmode="email"></div>
+   <div class="rimob-auth-field"><label for="rimobPassword">Senha</label><input id="rimobPassword" type="password" autocomplete="current-password" required></div>
+   <div class="rimob-auth-actions"><button class="primary" id="rimobLoginBtn" type="submit">Entrar</button><button class="rimob-auth-secondary" id="rimobRecoveryBtn" type="button">Recuperar senha</button></div>
+  </form>
+  <div class="rimob-auth-field" id="rimobLicenseArea"><label for="rimobAccessCode">Access Code / Código de licença</label><input id="rimobAccessCode" type="password" autocomplete="off" autocapitalize="off"></div>
+  <div class="rimob-auth-actions"><button class="primary" id="rimobActivateBtn" type="button">Ativar licença</button></div>
+  <div id="rimobAuthMessage" class="rimob-auth-message" role="status" aria-live="polite"></div>
+  <div class="rimob-auth-hint">A licença é vinculada ao navegador/dispositivo. A validação online é necessária para ativação e renovação do período offline.</div>
+ </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+<script>
+// Logout Web é registrado no módulo de autenticação ao final do arquivo.
+const CONFIG = {
+  "title":"RIMOB | Retorno de Investimento Imobiliário",
+  "defaults":{
+     "clientName":"","analystName":"","analysisDate":"2026-10-17",
+    "property":"Apartamento","address":"","neighborhood":"","cep":"","city":"Natal","state":"RN",
+    "price":550000,"setup":10000,"rent":3000,"rentDiscountPct":3,
+    "vacancyPct":5,"defaultPct":3,"managementPct":8,"vacancyAmount":0,"defaultAmount":0,"managementAmount":0,"rentDiscountAmount":0,"maintenanceAmount":0,"intermediationPct":100,"intermediationFee":0,"condoOwner":0,"propertyTax":1200,"insurance":600,
+    "maintenancePct":0.5,"otherTaxableIncome":0,"rentGrowthPct":4,"appreciationPct":5,
+    "expenseGrowthPct":4,"horizon":10,"benchmarkPct":10.58,"benchmarkDescription":"CDB 100% do CDI, Bradesco; prazo acima de 30 dias; taxa líquida estimada após IR regressivo (sem IOF após 30 dias)","inflationPct":4.5,
+    "paymentMethod":"À vista","downPaymentPct":30,"loanTerm":30,"loanRatePct":12,"amortization":"SAC","loanMonthlyFees":150,
+    "itbiPct":3,"deedPct":1,"registryPct":0.75,"itbi":0,"deedCost":0,"registryCost":0,"bankValuation":0,"bankContractFee":0,"otherAcquisition":1000,"saleCommissionPct":0,"capitalGainsMode":"Tributar ganho de capital"
+  },
+  "fields":[
+    ["clientName","Nome do cliente","text","text"],["analystName","Nome do analista","text","text"],["analysisDate","Data da análise","date"],
+    ["property","Tipo de imóvel","select",["Apartamento","Casa","Terreno","Sala comercial","Loja","Galpão","Imóvel rural","Outro"]],
+    ["address","Endereço do imóvel","text","text"],["neighborhood","Bairro","text","text"],["cep","CEP","cep"],
+    ["city","Cidade","text","text"],["state","Estado (UF)","select",["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]],
+    ["price","Preço de compra negociado (R$)","money"],
+    ["setup","Reforma, mobília e preparação (R$)","money"],
+    ["itbiPct","ITBI / ITIV (%) · estimativa inicial editável","pct"],["itbi","Valor estimado do ITBI / ITIV (R$)","calculatedMoney"],
+    ["deedPct","Escritura (%) · estimativa inicial editável","pct"],["deedCost","Valor estimado da escritura (R$)","calculatedMoney"],
+    ["registryPct","Registro (%) · estimativa inicial editável","pct"],["registryCost","Valor estimado do registro (R$)","calculatedMoney"],
+    ["otherAcquisition","Outros custos de aquisição (R$)","money"],
+    ["paymentMethod","Forma de pagamento","select",["À vista","Financiamento bancário"]],
+    ["downPaymentPct","Entrada sobre o preço (%)","pct"],
+    ["loanTerm","Prazo do financiamento (anos)","number"],["loanRatePct","Taxa nominal anual do financiamento (%)","pct"],
+    ["amortization","Sistema de amortização","select",["SAC","PRICE"]],
+    ["bankValuation","Avaliação bancária / engenharia (R$)","money"],["bankContractFee","Tarifa de contratação / cadastro bancário (R$)","money"],
+    ["loanMonthlyFees","Seguros e tarifas mensais estimados (R$)","money"],
+    ["rent","Aluguel mensal esperado (R$)","money"],
+    ["rentDiscountPct","Desconto sobre aluguel anunciado (%)","pct"],["rentDiscountAmount","Desconto estimado (R$/mês)","calculatedMoney"],
+    ["vacancyPct","Vacância (%)","pct"],["vacancyAmount","Impacto estimado da vacância (R$/mês)","calculatedMoney"],
+    ["defaultPct","Inadimplência (%)","pct"],["defaultAmount","Impacto estimado da inadimplência (R$/mês)","calculatedMoney"],
+    ["managementPct","Administração imobiliária (%)","pct"],["managementAmount","Administração estimada (R$/mês)","calculatedMoney"],
+    ["intermediationPct","Comissão de intermediação (% do 1º aluguel)","pct"],["intermediationFee","Comissão estimada (R$; valor do 1º aluguel)","calculatedMoney"],
+    ["condoOwner","Condomínio mensal (R$)","money"],["propertyTax","IPTU anual (R$)","money"],
+    ["maintenancePct","Manutenção predial (% do aluguel bruto)","pct"],["maintenanceAmount","Manutenção estimada (R$/mês)","calculatedMoney"],
+    ["insurance","Seguro e outras despesas anuais (R$)","money"],
+    ["rentGrowthPct","Crescimento anual do aluguel (%)","pct"],["appreciationPct","Valorização anual estimada (%)","pct"],
+    ["expenseGrowthPct","Crescimento anual das despesas (%)","pct"],
+    ["saleCommissionPct","Comissão de corretagem na venda (% do valor de venda)","pct"],
+    ["capitalGainsMode","Imposto sobre ganho de capital na venda","select",["Tributar ganho de capital","Isento por regra legal","Não considerar"]],
+    ["otherTaxableIncome","Outras rendas tributáveis mensais do locador (R$)","money"],
+    ["horizon","Horizonte (anos)","number"],
+    ["benchmarkPct","Aplicação alternativa líquida anual (%)","pct"],["benchmarkDescription","Descrição da aplicação alternativa","text","text"],["inflationPct","Inflação anual estimada (%)","pct"]
+  ]};
+const LEGACY_DEFAULTS={saleCommissionPct:'0',capitalGainsMode:'Não considerar'};
+const money=n=>{const x=Number(n);return Number.isFinite(x)?new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(x):'Não calculado';};
+const parseMoney=s=>{if(typeof s==='number')return s;let x=String(s??'').trim().replace(/\./g,'').replace(',', '.').replace(/[^0-9.-]/g,'');return Number(x)||0;};
+const formatMoneyInput=s=>{const n=parseMoney(s);return s===''?'':new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);};
+const pct=n=>{const x=Number(n);return Number.isFinite(x)?new Intl.NumberFormat('pt-BR',{style:'percent',minimumFractionDigits:2,maximumFractionDigits:2}).format(x):'Não calculado';};
+const num=n=>new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(n);
+const parseLocaleNumber=s=>{if(typeof s==='number')return s;let x=String(s??'').trim().replace(/\s/g,'').replace(/%$/,'');if(!x)return 0;if(x.includes(','))x=x.replace(/\./g,'').replace(',', '.');return Number(x)||0;};
+const formatPctInput=s=>{const n=parseLocaleNumber(s);return s===''?'':new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(n);};
+function renderFields(){
+ const box=document.getElementById('fields');box.innerHTML='';
+ let currentSection=0;
+ CONFIG.fields.forEach(([key,label,type,options])=>{const sectionTitles={
+ 'price':'1. Imóvel e custos de aquisição',
+ 'paymentMethod':'2. Forma de compra',
+ 'downPaymentPct':'3. Condições do financiamento',
+ 'rent':'4. Locação, despesas e valorização',
+ 'otherTaxableIncome':'5. Tributação estimada do aluguel (IRPF)'
+ };
+ if(sectionTitles[key]){currentSection=Number(key==='price'?1:key==='paymentMethod'?2:key==='downPaymentPct'?3:key==='rent'?4:5);const h=document.createElement('div');h.className='field full';h.innerHTML='<h3 style="margin:14px 0 2px;color:#17365d;font-size:15px;border-bottom:1px solid #dce4ec;padding-bottom:6px">'+sectionTitles[key]+'</h3>';box.append(h);}
+ const d=document.createElement('div');d.className='field'+(['clientName','analystName','analysisDate','property','address','benchmarkDescription','rent','otherTaxableIncome'].includes(key)?' full':'');
+ if(currentSection===4&&type==='pct')d.classList.add('part4-percent');
+ if(currentSection===4&&type==='calculatedMoney')d.classList.add('part4-calculated');
+ const l=document.createElement('label');l.htmlFor=key;l.textContent=label;let i;
+ if(type==='select'){i=document.createElement('select');(options||[]).forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;i.append(o);});}
+ else {i=document.createElement('input');i.type=(type==='text'||type==='cep'||type==='money'||type==='pct'||type==='calculatedMoney')?'text':type==='date'?'date':'number';if(type==='money'||type==='pct'||type==='calculatedMoney'){i.inputMode='decimal';i.placeholder=type==='pct'?'0,0':'0,00';}if(type==='calculatedMoney'){i.readOnly=true;i.setAttribute('aria-label',label+' calculado automaticamente');}if(type==='cep'){i.inputMode='numeric';i.maxLength=10;i.placeholder='00.000-000';}if(type==='number'){i.step='1';i.min=1;i.max=35;}}
+ i.id=key;i.value=CONFIG.defaults[key];d.append(l,i);box.append(d);});
+}
+function get(){
+ const v={};CONFIG.fields.forEach(([k,,t])=>{let x=document.getElementById(k).value;v[k]=(t==='money'||t==='calculatedMoney')?parseMoney(x):(t==='pct')?parseLocaleNumber(x):(t==='text'||t==='select'||t==='date'||t==='cep')?x:Number(x)||0;});
+ ['rentDiscountPct','vacancyPct','defaultPct','managementPct','maintenancePct','intermediationPct','rentGrowthPct','appreciationPct','expenseGrowthPct','benchmarkPct','inflationPct','downPaymentPct','loanRatePct','itbiPct','deedPct','registryPct','saleCommissionPct'].forEach(k=>v[k]=(Number(v[k])||0)/100);
+ v.itbi=v.price*v.itbiPct;v.deedCost=v.price*v.deedPct;v.registryCost=v.price*v.registryPct;
+ v.horizon=Math.max(1,Math.min(30,Math.round(v.horizon)));return v;
+}
+
+function refreshDerivedFields(){
+ const v=get();
+ const rentAfterDiscount=Math.max(0,v.rent*(1-v.rentDiscountPct));
+ const afterVacancy=rentAfterDiscount*(1-v.vacancyPct);
+ const afterDefault=afterVacancy*(1-v.defaultPct);
+ const values={
+  itbi:v.itbi,deedCost:v.deedCost,registryCost:v.registryCost,
+  rentDiscountAmount:v.rent* v.rentDiscountPct,
+  vacancyAmount:rentAfterDiscount*v.vacancyPct,
+  defaultAmount:afterVacancy*v.defaultPct,
+  managementAmount:afterDefault*v.managementPct,
+  intermediationFee:rentAfterDiscount*v.intermediationPct,
+  maintenanceAmount:rentAfterDiscount*v.maintenancePct
+ };
+ Object.entries(values).forEach(([key,value])=>{const el=document.getElementById(key);if(el)el.value=formatMoneyInput(value);});
+}
+
+
+// A tabela é escolhida pelo ano da data da análise; sem tabela desse ano, usa a mais recente anterior.
+
+
+
+// Estimativa marginal mensal do IRPF de aluguel. Usa a tabela progressiva e o redutor da tabela
+// ativa e compara o desconto simplificado com as despesas dedutíveis informadas.
+// Assume outras rendas tributáveis mensais informadas pelo usuário e desconto simplificado nelas.
+// A tabela do ano da análise é mantida constante em todo o horizonte projetado.
+
+
+
+// Regras de ganho de capital: faixas progressivas (embutidas; podem ser atualizadas pela fonte remota).
+
+
+
+// Custos da venda ao final do horizonte: corretagem e imposto sobre o ganho de capital
+// (ganho = valor de venda - corretagem - custo de aquisição: preço, ITBI, escritura e registro).
+
+
+function metric(label,value,note,cls=''){return `<div class="metric ${cls}"><div class="label">${label}</div><div class="value">${value}</div><div class="note">${note}</div></div>`}
+function renderResults(){
+ const raw=get(),v={...raw},S=serverData;if(!S)return;const r=S.result;
+ const numericResults=[r.initial,r.loan,r.yieldGross,r.yieldNet,r.saleGross,r.saleNet,r.cumRent,r.alternative,r.diff,r.balance,...r.rows.flatMap(x=>[x.rent,x.operatingNet,x.debtPayment,x.balance,x.sale,x.total])];
+ if(numericResults.some(x=>!Number.isFinite(x))) { document.getElementById('interpretation').textContent='Não foi possível calcular: revise os campos numéricos e percentuais.'; throw new Error('Resultado numérico inválido'); }
+ const cls=r.diff>=0?'good':'bad';
+ document.getElementById('results').innerHTML=[
+ metric('Desembolso inicial',money(r.initial),'Preço à vista ou entrada + custos individualizados + preparação'),
+ metric('Financiamento estimado',money(r.loan),v.paymentMethod==='Financiamento bancário'?`Prazo ${v.loanTerm} anos · ${v.amortization}`:'Sem dívida'),
+ metric('Yield bruto anual',pct(r.yieldGross),'Aluguel efetivo anual / preço de compra'),
+ metric('Cap rate (NOI)',Number.isFinite(r.capRate)?pct(r.capRate):'N/D','NOI do 1º ano / preço de compra; antes do financiamento e do IRPF. Portais costumam divulgar o cap rate em base bruta'),
+ metric('Rental yield líquido anual',Number.isFinite(r.yieldNet)?pct(r.yieldNet):'N/D','Resultado operacional após IRPF / custo total de aquisição; antes do serviço da dívida'),
+ metric('Cash-on-cash (1º ano)',Number.isFinite(r.cashOnCash)?pct(r.cashOnCash):'N/D','Fluxo de caixa anual após dívida e IRPF / capital próprio investido'),
+ metric('Prestação inicial estimada',money(r.rows[0]?.debtPayment/12||0),'Média mensal calculada com os seguros e tarifas informados'),
+ metric('TIR (IRR) anual estimada do investimento',r.tir===null?'N/D':pct(r.tir),'Considera o momento dos fluxos, o financiamento e o valor estimado do imóvel ao final',r.tir!==null&&r.tir>=v.benchmarkPct?'good':''),
+ metric('Valor estimado do imóvel ao final',money(r.saleGross),'Valorização estimada, antes da dívida e dos custos de venda'),
+ metric('Juros totais estimados',money(r.totalInterest),'Sem correção futura por TR/IPCA'),
+ metric('Diferença estimada vs. aplicação',money(r.diff),r.diff>=0?'Nesta simulação, o resultado do imóvel é superior':'Nesta simulação, o resultado da aplicação é superior',cls)
+ ].join('');
+ document.getElementById('comparison').innerHTML=`<thead><tr><th>Indicador</th><th>Imóvel para locação</th><th>Aplicação alternativa</th></tr></thead><tbody>
+ <tr><td>Capital inicial</td><td>${money(r.initial)}</td><td>${money(r.initial)}</td></tr>
+ <tr><td>Valor estimado do imóvel ao final, líquido da dívida e dos custos de venda</td><td>${money(r.saleNet)}</td><td>${money(r.alternative)}</td></tr>
+ <tr><td>Corretagem na venda</td><td>${money(r.saleCommission)}</td><td>Não aplicável</td></tr>
+ <tr><td>Imposto sobre ganho de capital</td><td>${money(r.capitalGainsTax)}</td><td>Não aplicável</td></tr>
+ <tr><td>Fluxos líquidos de aluguel após dívida acumulados</td><td>${money(r.cumRent)}</td><td>Não aplicável</td></tr>
+ <tr><td>Juros estimados pagos</td><td>${money(r.totalInterest)}</td><td>Não aplicável</td></tr>
+ <tr><td>Cap rate (NOI), 1º ano</td><td>${Number.isFinite(r.capRate)?pct(r.capRate):'N/D'}</td><td>Não aplicável</td></tr>
+ <tr><td>Cash-on-cash (1º ano)</td><td>${Number.isFinite(r.cashOnCash)?pct(r.cashOnCash):'N/D'}</td><td>Não aplicável</td></tr>
+ <tr><td>TIR (IRR) anual estimada</td><td>${r.tir===null?'N/D':pct(r.tir)}</td><td>${pct(v.benchmarkPct)} (taxa informada)</td></tr>
+ <tr><td>Diferença estimada</td><td colspan="2">${money(r.diff)} ${r.diff>=0?'a favor do imóvel':'a favor da aplicação'}</td></tr></tbody>`;
+ document.getElementById('cashflow').innerHTML=`<thead><tr><th>Ano</th><th>Aluguel potencial</th><th>Operacional líquido</th><th>Prestação anual</th><th>Saldo devedor estimado</th><th>Valor do imóvel ao final, líquido da dívida e dos custos de venda</th><th>Fluxo total após dívida</th><th>Cash-on-cash do ano</th></tr></thead><tbody>`+
+ r.rows.map(x=>`<tr><td>${x.year}</td><td>${money(x.rent)}</td><td>${money(x.operatingNet)}</td><td>${money(x.debtPayment)}</td><td>${money(x.balance)}</td><td>${money(x.sale)}</td><td>${money(x.total)}</td><td>${r.initial>0?pct(x.cashFlow/r.initial):'N/D'}</td></tr>`).join('')+'</tbody>';
+ const vals=[-0.02,0,0.02,0.04,0.06,0.08,0.10];
+ document.getElementById('sensitivity').innerHTML=`<thead><tr><th>Valorização anual</th><th>Valor do imóvel ao final, líquido da dívida e dos custos de venda</th><th>Fluxos líquidos acumulados</th><th>Resultado total estimado</th><th>Diferença estimada vs. aplicação</th><th>TIR (IRR) anual estimada</th></tr></thead><tbody>`+
+ vals.map((a,ai)=>{const sr=S.appreciation[ai];
+  return `<tr><td>${pct(a)}</td><td>${money(sr.saleNet)}</td><td>${money(sr.cumRent)}</td><td>${money(sr.propertyTotal)}</td><td>${money(sr.diff)}</td><td>${sr.tir===null?'N/D':pct(sr.tir)}</td></tr>`;
+ }).join('')+'</tbody>';
+ const rentMultipliers=[0.70,0.80,0.90,1.00,1.10,1.20,1.30];
+ document.getElementById('rentSensitivity').innerHTML=`<thead><tr><th>Aluguel mensal simulado</th><th>Variação vs. aluguel informado</th><th>Cap rate (NOI)</th><th>Yield líquido inicial</th><th>Cash-on-cash (1º ano)</th><th>Diferença estimada vs. aplicação</th><th>TIR (IRR) anual estimada</th></tr></thead><tbody>`+
+ rentMultipliers.map((mult,mi)=>{const sr=S.rentScenarios[mi];const rentScenario=sr.rent;
+  return `<tr><td>${money(rentScenario)}</td><td>${pct(mult-1)}</td><td>${Number.isFinite(sr.capRate)?pct(sr.capRate):'N/D'}</td><td>${Number.isFinite(sr.yieldNet)?pct(sr.yieldNet):'N/D'}</td><td>${Number.isFinite(sr.cashOnCash)?pct(sr.cashOnCash):'N/D'}</td><td>${money(sr.diff)}</td><td>${sr.tir===null?'N/D':pct(sr.tir)}</td></tr>`;
+ }).join('')+'</tbody>';
+ document.getElementById('interpretation').innerHTML=`<b>${r.diff>=0?'Nessa simulação, o resultado acumulado do imóvel supera a referência financeira.':'Nessa simulação, a aplicação financeira apresenta resultado acumulado superior ao imóvel.'}</b> A comparação utiliza a taxa líquida informada para a aplicação e considera a capitalização do capital inicial; os fluxos periódicos de aluguel e as prestações não são reinvestidos automaticamente no benchmark. Vacância e inadimplência são premissas distintas e aplicadas sucessivamente ao aluguel potencial. A comissão de intermediação informada é considerada uma única vez, no primeiro ano da locação. Na venda ao final do horizonte, são considerados a corretagem informada e, conforme a opção escolhida, o imposto sobre ganho de capital (alíquotas progressivas a partir de 15% sobre o ganho); confirme na legislação vigente se há isenção aplicável. O IRPF do aluguel é estimado pela ${irpfDescription()}, incluindo o redutor legal e o desconto simplificado; considera a renda tributável mensal adicional informada e despesas de administração, condomínio e IPTU quando atribuídas ao locador pelo contrato. Confira o resultado na apuração fiscal individual, inclusive no Carnê-Leão e na declaração anual. A aplicação alternativa deve ser informada com taxa líquida após tributos; para CDB, o IR regressivo continua devido mesmo após 30 dias, quando deixa de incidir IOF. Para decisão final, compare as TIRs e faça uma simulação de financiamento na CAIXA. <br><br><b>Métricas de retorno:</b> o <b>cap rate</b> mede o rendimento operacional do imóvel (NOI do 1º ano sobre o preço de compra), sem considerar financiamento nem imposto de renda, e não inclui a comissão única de intermediação. O <b>cash-on-cash</b> relaciona o fluxo de caixa anual, após prestações e IRPF, ao capital próprio efetivamente investido; em compra à vista, aproxima-se do rental yield líquido. A <b>TIR (IRR)</b> considera o momento de todos os fluxos, o financiamento e o valor estimado de venda ao final do horizonte. Um cap rate maior não significa, por si só, melhor investimento: avalie as três métricas em conjunto.<br><br><b>Financiamento:</b> a prestação estimada considera juros e amortização em SAC ou PRICE, mais uma estimativa mensal de seguros/tarifas. Não inclui a atualização futura do saldo por TR/IPCA nem reproduz o CET individual. A CAIXA informa que a prestação real pode incluir amortização, juros, MIP, DFI e tarifas. <br><br><b>Responsabilidade pelas despesas:</b> informe condomínio e IPTU conforme a distribuição de responsabilidades prevista no contrato de locação. Se esses encargos forem pagos diretamente pelo locatário e não representarem custo do investidor, mantenha os respectivos campos em zero. <br><br><b>Validação das premissas:</b> valide preço e aluguel com comparáveis locais, custos de aquisição, tributação, vacância, taxa e indexador de financiamento. A valorização não é garantida.`;
+}
+let originalPurchasePrice = null;
+let originalMonthlyRent = null;
+let applyingDynamicPrice = false;
+
+// ---- Cálculo no servidor (Edge Function "calcular"): nenhuma fórmula fica neste arquivo ----
+let serverData=null,runTimer=null,runSeq=0,dynTimer=null;
+async function serverCall(body){
+ const client=rimobClient(),lic=rimobLicense();
+ if(!client||!lic||!lic.codeHash||!rimobAuthUser)throw new Error('Faça login para calcular.');
+ const deviceHash=await rimobSha256(rimobDeviceId());
+ const {data,error}=await client.functions.invoke('calcular',{body:{...body,codeHash:lic.codeHash,deviceHash}});
+ if(error){let j=null;try{j=await error.context.json();}catch(e){}
+  throw Object.assign(new Error((j&&j.error)||'Não foi possível calcular. Verifique a conexão.'),{code:j&&j.code});}
+ if(data&&data.error)throw Object.assign(new Error(data.error),{code:data.code});
+ return data;
+}
+function irpfDescription(){
+ const a=serverData&&serverData.irpf;if(!a)return 'tabela mensal do IRPF';
+ return a.exact?`tabela mensal do IRPF de ${a.year}`:`tabela mensal do IRPF de ${a.year} (a mais recente disponível; ainda não há tabela de ${a.requestedYear} cadastrada, portanto o resultado deve ser revisto quando ela for publicada)`;
+}
+function updateIrpfInfo(){
+ const a=serverData&&serverData.irpf,el=document.getElementById('irpfTableInfo');if(!a||!el)return;
+ el.textContent=a.exact?`tabela ${a.year}`:`tabela ${a.year}, a mais recente disponível; não há tabela de ${a.requestedYear} cadastrada`;
+}
+function run(){clearTimeout(runTimer);runTimer=setTimeout(runNow,450);}
+async function runNow(){
+ if(!rimobAuthUser)return;
+ const seq=++runSeq;
+ try{
+  const d=await serverCall({op:'analyze',values:get()});
+  if(seq!==runSeq)return;
+  serverData=d;updateIrpfInfo();
+  try{renderResults();}catch(e){console.error(e);}
+ }catch(e){
+  if(seq!==runSeq)return;
+  const el=document.getElementById('interpretation');
+  if(el)el.textContent='Cálculo indisponível: '+(e.message||'tente novamente.');
+  if(e.code==='license'){rimobShowGate(true);}
+ }
+}
+function updateDynamicAnalysis(){clearTimeout(dynTimer);dynTimer=setTimeout(updateDynamicAnalysisNow,500);}
+function dynamicNumber(id){const n=Number(document.getElementById(id).value);return Number.isFinite(n)?n:0;}
+function setActivePurchasePrice(value){
+ const priceEl=document.getElementById('price');
+ applyingDynamicPrice=true;
+ priceEl.value=formatMoneyInput(value);
+ applyingDynamicPrice=false;
+ refreshDerivedFields();
+ run();
+ updateReportMeta(activeAnalysisId);
+ saveLast();
+}
+function restoreOriginalPurchasePrice(){
+ const base=Number.isFinite(originalPurchasePrice)?originalPurchasePrice:parseMoney(document.getElementById('price').value);
+ const baseRent=Number.isFinite(originalMonthlyRent)?originalMonthlyRent:parseMoney(document.getElementById('rent').value);
+ document.getElementById('dynamicPrice').value=formatMoneyInput(0);
+ applyingDynamicPrice=true;
+ document.getElementById('price').value=formatMoneyInput(base);
+ document.getElementById('rent').value=formatMoneyInput(baseRent);
+ applyingDynamicPrice=false;
+ refreshDerivedFields();run();updateReportMeta(activeAnalysisId);saveLast();
+}
+// VPL (à taxa desejada) do investimento para um dado preço de compra. Como a TIR >= meta equivale a VPL >= 0,
+
+async function updateDynamicAnalysisNow(){
+ const rent=dynamicNumber('dynamicRent');
+ const target=dynamicNumber('dynamicTir')/100;
+ const status=document.getElementById('dynamicStatus');
+ if(rent<=0 || target<=0){
+  status.textContent='Informe o aluguel mensal alvo e a TIR anual desejada para calcular o preço máximo. Com as duas premissas zeradas, prevalece o preço informado no formulário.';
+  restoreOriginalPurchasePrice();
+  return;
+ }
+ const base=get();
+ let calculated=NaN;
+ try{const d=await serverCall({op:'solve',values:base,rent,target});calculated=(d&&d.price>0)?d.price:NaN;}catch(e){status.textContent='Cálculo indisponível: '+(e.message||'tente novamente.');return;}
+ if(!Number.isFinite(calculated)||calculated<=0){
+  status.textContent='Não foi possível encontrar um preço máximo positivo para essa TIR com as premissas informadas. Revise o aluguel, as despesas, a valorização e a TIR desejada.';
+  restoreOriginalPurchasePrice();
+  return;
+ }
+ document.getElementById('dynamicPrice').value=formatMoneyInput(calculated);
+ applyingDynamicPrice=true;
+ document.getElementById('price').value=formatMoneyInput(calculated);
+ document.getElementById('rent').value=formatMoneyInput(rent);
+ applyingDynamicPrice=false;
+ refreshDerivedFields();
+ run();
+ updateReportMeta(activeAnalysisId);
+ saveLast();
+ status.textContent=`Preço máximo de compra estimado: ${money(calculated)}, para TIR de ${pct(target)} a.a. (aluguel ${money(rent)}/mês, valorização ${pct(base.appreciationPct)} a.a., horizonte de ${base.horizon} anos). O formulário e as projeções foram atualizados com esse preço e o aluguel informado.`;
+}
+function resetDynamicInputs(){
+ const rent=document.getElementById('dynamicRent');
+ const yieldInput=document.getElementById('dynamicTir');
+ if(rent)rent.value='0';
+ if(yieldInput)yieldInput.value='0';
+ document.getElementById('dynamicPrice').value=formatMoneyInput(0);
+ document.getElementById('dynamicStatus').textContent='Informe as duas premissas para calcular o preço máximo. Enquanto estiverem zeradas, será utilizado o preço manual do formulário.';
+}
+function syncDynamicFromBase(){
+ // As premissas do simulador são independentes do formulário e sempre iniciam zeradas.
+ if(originalPurchasePrice===null){originalPurchasePrice=parseMoney(document.getElementById('price')?.value||0);}
+ if(originalMonthlyRent===null){originalMonthlyRent=parseMoney(document.getElementById('rent')?.value||0);}
+ resetDynamicInputs();
+ restoreOriginalPurchasePrice();
+}
+function initializeDynamicAnalysis(){
+ if(originalPurchasePrice===null)originalPurchasePrice=parseMoney(document.getElementById('price')?.value||0);
+ if(originalMonthlyRent===null)originalMonthlyRent=parseMoney(document.getElementById('rent')?.value||0);
+ syncDynamicFromBase();
+ ['dynamicRent','dynamicTir'].forEach(id=>document.getElementById(id).addEventListener('input',updateDynamicAnalysis));
+}
+const STORAGE_LAST='imob_analysis_last_v2';
+const STORAGE_ARCHIVE='imob_analysis_archive_v2';
+let activeAnalysisId=null;
+let savedKey=null,restoredPristineKey=null;
+// Chave normalizada dos campos editáveis, usada para detectar alterações não salvas.
+function stateKey(values){
+ const o={};
+ CONFIG.fields.forEach(([k,,t])=>{
+  if(t==='calculatedMoney')return;
+  let x=values?values[k]:'';
+  if(t==='money')x=Math.round(parseMoney(x)*100);
+  else if(t==='pct')x=Math.round((parseLocaleNumber(x)||0)*10000);
+  else x=String(x??'').trim();
+  o[k]=x;
+ });
+ return JSON.stringify(o);
+}
+function isDirty(){return savedKey!==null&&stateKey(readFields())!==savedKey;}
+function markClean(){savedKey=stateKey(readFields());updateSaveState();}
+function updateSaveState(){
+ const el=document.getElementById('saveState');if(!el||savedKey===null)return;
+ const dirty=isDirty();
+ el.classList.toggle('dirty',dirty);
+ el.textContent=dirty?'● Alterações não salvas':(activeAnalysisId?`Salva (ID ${activeAnalysisId})`:'Nova análise, ainda não salva');
+}
+function todayISO(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function readFields(){const v={};CONFIG.fields.forEach(([k,,t])=>{const el=document.getElementById(k);v[k]=el?el.value:'';});return v;}
+function applyFields(values){CONFIG.fields.forEach(([k,,t,opts])=>{const el=document.getElementById(k);if(el && values && values[k]!==undefined){el.value=values[k];if(t==='money')el.value=formatMoneyInput(el.value);if(t==='pct')el.value=formatPctInput(el.value);if(t==='cep')el.value=maskCep(el.value);}});if(values && values.vacancyPct!==undefined && values.defaultPct===undefined){const el=document.getElementById('defaultPct');if(el)el.value='0';}if(values && values.intermediationPct===undefined){const el=document.getElementById('intermediationPct');if(el)el.value='100';}}
+function saveLast(){try{localStorage.setItem(STORAGE_LAST,JSON.stringify({values:readFields(),activeAnalysisId,originalPurchasePrice,originalMonthlyRent}));}catch(e){}updateSaveState();}
+function loadArchive(){try{return JSON.parse(localStorage.getItem(STORAGE_ARCHIVE)||'[]')}catch(e){return []}}
+function saveArchive(list){try{localStorage.setItem(STORAGE_ARCHIVE,JSON.stringify(list));return true;}catch(e){alert('Não foi possível armazenar a análise. O armazenamento local do navegador pode estar cheio ou bloqueado.');return false;}}
+function makeAnalysisId(){
+ const list=loadArchive();let id;
+ do { id=String(Date.now())+String(Math.floor(Math.random()*900)+100); } while(list.some(x=>x.id===id));
+ return id;
+}
+function displayDate(iso){if(!iso)return 'Não informado';const p=iso.split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:iso;}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function updateReportMeta(id){
+ const v=readFields();
+ const address=[v.address,v.neighborhood?`Bairro ${v.neighborhood}`:'',v.cep?`CEP ${v.cep}`:'',v.city,v.state].filter(Boolean).join(', ');
+ const data=[
+ ['ID da análise',id||activeAnalysisId||'Ainda não gerado'],
+ ['Data da análise',displayDate(v.analysisDate)],
+ ['Nome do cliente',v.clientName||'Não informado'],
+ ['Nome do analista',v.analystName||'Não informado'],
+ ['Tipo de imóvel',v.property||'Não informado'],
+ ['Endereço completo',address||'Não informado']
+ ];
+ const target=document.getElementById('reportMetaContent');
+ if(target)target.innerHTML=data.map(([k,val])=>`<div class="meta-item"><dt>${esc(k)}</dt><dd>${esc(val)}</dd></div>`).join('');
+}
+function askUnsaved(action){
+ return new Promise(resolve=>{
+  const prev=document.activeElement;
+  const o=document.createElement('div');o.className='modal-overlay';
+  o.innerHTML=`<div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="unsavedTitle"><h3 id="unsavedTitle">Salvar alterações?</h3><p>A análise atual tem alterações que ainda não foram salvas. Deseja salvá-las antes de ${esc(action)}?</p><div class="modal-actions"><button class="secondary" type="button" data-choice="cancel">Cancelar</button><button class="danger" type="button" data-choice="discard">Não salvar</button><button class="primary" type="button" data-choice="save">Salvar</button></div></div>`;
+  const onKey=e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();done('cancel');}};
+  const done=c=>{document.removeEventListener('keydown',onKey,true);o.remove();if(prev&&prev.focus)try{prev.focus()}catch(e){}resolve(c);};
+  o.querySelectorAll('[data-choice]').forEach(b=>b.addEventListener('click',()=>done(b.dataset.choice)));
+  document.addEventListener('keydown',onKey,true);
+  document.body.appendChild(o);
+  o.querySelector('[data-choice="save"]').focus();
+ });
+}
+// Retorna true se a ação pode prosseguir (nada pendente, salvou ou o usuário descartou).
+async function resolveUnsaved(action){
+ if(!isDirty())return true;
+ const choice=await askUnsaved(action);
+ if(choice==='cancel')return false;
+ if(choice==='save')return saveAnalysis();
+ return true;
+}
+// Salvar: atualiza o registro da análise ativa ou cria um novo registro se for uma nova análise.
+function saveAnalysis(){
+ const anyFilled=CONFIG.fields.some(([key])=>{const node=document.getElementById(key);return node&&node.value.trim()!=='';});
+ if(!anyFilled){alert('Preencha os dados da análise antes de salvar.');return false;}
+ try{
+  run();
+  const v=readFields();
+  const id=activeAnalysisId||makeAnalysisId();
+  const list=loadArchive();
+  const idx=list.findIndex(x=>String(x.id)===String(id));
+  const snapshot={id,createdAt:Date.now(),updatedAt:Date.now(),values:v,originalPurchasePrice,originalMonthlyRent};
+  if(idx>=0){snapshot.createdAt=list[idx].createdAt||snapshot.createdAt;list[idx]=snapshot;}else list.push(snapshot);
+  if(!saveArchive(list))return false;
+  activeAnalysisId=id;
+  markClean();saveLast();renderArchive();updateReportMeta(id);
+  const status=document.getElementById('newAnalysisStatus');
+  if(status)status.textContent=idx>=0?`Análise ${id} atualizada.`:`Nova análise salva com o ID ${id}.`;
+  return true;
+ }catch(err){
+  alert('Não foi possível salvar a análise.\n\n'+(err.message||String(err)));
+  return false;
+ }
+}
+function renderArchive(){
+  const list=loadArchive().sort((a,b)=>Number(b.createdAt)-Number(a.createdAt));
+  const box=document.getElementById('archiveList');
+  if(!list.length){box.innerHTML='<p class="small">Nenhuma análise foi armazenada ainda. Os registros são criados ao clicar em “Salvar”.</p>';return;}
+  box.innerHTML=list.map(a=>`<div class="archive-item">
+    <div class="archive-item-info"><b>ID ${esc(a.id)}</b><br><span class="small">${esc(a.values.clientName||'Cliente não informado')} · ${esc(a.values.property||'Imóvel')} · ${esc(displayDate(a.values.analysisDate))}</span></div>
+    <div class="archive-item-actions">
+      <button class="secondary" type="button" data-load-id="${esc(a.id)}">Abrir análise</button>
+      <button class="danger" type="button" data-delete-id="${esc(a.id)}" aria-label="Excluir análise ${esc(a.id)}" title="Excluir análise">
+        <span aria-hidden="true">🗑</span> Excluir
+      </button>
+    </div>
+  </div>`).join('');
+  box.querySelectorAll('[data-load-id]').forEach(btn=>btn.addEventListener('click',async()=>{
+    if(!await resolveUnsaved('abrir outra análise'))return;
+    const a=loadArchive().find(x=>x.id===btn.dataset.loadId);
+    if(a){
+      applyFields({...LEGACY_DEFAULTS,...a.values});activeAnalysisId=a.id;originalPurchasePrice=Number.isFinite(Number(a.originalPurchasePrice))?Number(a.originalPurchasePrice):parseMoney(a.values.price||0);originalMonthlyRent=Number.isFinite(Number(a.originalMonthlyRent))?Number(a.originalMonthlyRent):parseMoney(a.values.rent||0);refreshDerivedFields();syncDynamicFromBase();run();updateReportMeta(activeAnalysisId);markClean();saveLast();
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+  }));
+  box.querySelectorAll('[data-delete-id]').forEach(btn=>btn.addEventListener('click',()=>deleteAnalysis(btn.dataset.deleteId)));
+}
+
+function deleteAnalysis(id){
+  const list=loadArchive();
+  const analysis=list.find(x=>String(x.id)===String(id));
+  if(!analysis)return;
+  const client=analysis.values?.clientName||'cliente não informado';
+  const date=displayDate(analysis.values?.analysisDate);
+  const confirmed=window.confirm(`Confirma a exclusão definitiva desta análise do histórico local?\n\nID: ${id}\nCliente: ${client}\nData: ${date}\n\nEsta ação não poderá ser desfeita.`);
+  if(!confirmed)return;
+
+  const updated=list.filter(x=>String(x.id)!==String(id));
+  saveArchive(updated);
+
+  if(String(activeAnalysisId)===String(id)){
+    // Mantém os dados na tela como rascunho, mas desvincula o registro excluído.
+    activeAnalysisId=null;
+    updateReportMeta(null);
+    saveLast();
+  }
+
+  renderArchive();
+  const status=document.getElementById('newAnalysisStatus');
+  if(status)status.textContent=`Análise ${id} excluída do histórico deste navegador.`;
+}
+function clearResults(){
+ const results=document.getElementById('results');
+ if(results)results.innerHTML='<div class="noteBox">Preencha as premissas para visualizar os resultados, atualizados automaticamente.</div>'; 
+ ['comparison','cashflow','rentSensitivity','sensitivity'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
+ const interpretation=document.getElementById('interpretation');
+ if(interpretation)interpretation.textContent='A análise ainda não foi calculada.';
+}
+function initialize(){
+ renderFields();
+ let last=null;try{last=JSON.parse(localStorage.getItem(STORAGE_LAST)||'null')}catch(e){}
+ if(last&&last.values){applyFields(CONFIG.defaults);const pristine=readFields();restoredPristineKey=stateKey({...pristine,clientName:last.values.clientName,analystName:last.values.analystName,analysisDate:last.values.analysisDate});applyFields({...LEGACY_DEFAULTS,...last.values});activeAnalysisId=last.activeAnalysisId||null;originalPurchasePrice=Number.isFinite(Number(last.originalPurchasePrice))?Number(last.originalPurchasePrice):parseMoney(last.values.price||0);originalMonthlyRent=Number.isFinite(Number(last.originalMonthlyRent))?Number(last.originalMonthlyRent):parseMoney(last.values.rent||0);refreshDerivedFields();
+  const anyFilled=CONFIG.fields.some(([k])=>{const el=document.getElementById(k);return el&&el.value.trim()!=='';});
+  if(anyFilled)run();else clearResults();
+ } else {applyFields(CONFIG.defaults);document.getElementById('analysisDate').value=todayISO();activeAnalysisId=null;refreshDerivedFields();run();saveLast();}
+ updateReportMeta(activeAnalysisId);renderArchive();
+}
+async function newAnalysis(){
+ try {
+  if(!await resolveUnsaved('iniciar uma nova análise'))return;
+  const previous=readFields();
+  const preservedBuyer=previous.clientName||'';
+  const preservedAnalyst=previous.analystName||'';
+  activeAnalysisId=null;
+  originalPurchasePrice=Number(CONFIG.defaults.price)||0;
+  originalMonthlyRent=Number(CONFIG.defaults.rent)||0;
+  const next={...CONFIG.defaults,clientName:preservedBuyer,analystName:preservedAnalyst,analysisDate:todayISO()};
+  applyFields(next);
+  refreshDerivedFields();
+  if(typeof syncDynamicFromBase==='function')syncDynamicFromBase();
+  run();
+  updateReportMeta(null);
+  markClean();
+  saveLast();
+  renderArchive();
+  const status=document.getElementById('newAnalysisStatus');
+  if(status)status.textContent=preservedBuyer
+    ? `Nova análise iniciada. Os dados do comprador (${preservedBuyer}) e do analista foram mantidos; informe os dados do novo imóvel.`
+    : 'Nova análise iniciada. Informe os dados do comprador, analista e imóvel.';
+  window.scrollTo(0,0);
+ } catch(err) {
+  alert('Não foi possível iniciar uma nova análise: '+err.message);
+ }
+}
+// Máscaras de entrada: moeda brasileira sem símbolo monetário e CEP 00.000-000.
+function maskCep(value){const d=String(value||'').replace(/\D/g,'').slice(0,8);if(d.length<=2)return d;if(d.length<=5)return d.slice(0,2)+'.'+d.slice(2);return d.slice(0,2)+'.'+d.slice(2,5)+'-'+d.slice(5);}
+initialize();
+// Máscaras de entrada após renderização e restauração dos dados.
+CONFIG.fields.forEach(([k,,t])=>{const el=document.getElementById(k);if(!el)return;
+ if(t==='calculatedMoney'){el.value=formatMoneyInput(el.value);}
+ if(t==='money'){el.value=formatMoneyInput(el.value);el.addEventListener('focus',()=>{el.value=String(parseMoney(el.value)).replace('.',',');});el.addEventListener('blur',()=>{el.value=formatMoneyInput(el.value);saveLast();});}
+ if(t==='pct'){el.value=formatPctInput(el.value);el.addEventListener('blur',()=>{el.value=formatPctInput(el.value);saveLast();});}
+ if(t==='cep'){el.value=maskCep(el.value);el.addEventListener('input',()=>{el.value=maskCep(el.value);try{el.setSelectionRange(el.value.length,el.value.length)}catch(e){}});}
+});
+initializeDynamicAnalysis();
+refreshDerivedFields();
+document.getElementById('newAnalysis').onclick=newAnalysis;
+document.querySelectorAll('[data-save]').forEach(b=>b.addEventListener('click',()=>{saveAnalysis();}));
+// Gerar PDF não altera o histórico: apenas produz o relatório da análise exibida.
+document.getElementById('print').addEventListener('click',async()=>{
+ const button=document.getElementById('print');
+ const anyFilled=CONFIG.fields.some(([key])=>{const node=document.getElementById(key);return node&&node.value.trim()!=='';});
+ if(!anyFilled){alert('Preencha os dados da análise antes de gerar o PDF.');return;}
+ try {
+  run();
+  const v=readFields();
+  const id=activeAnalysisId;
+  const address=[v.address,v.neighborhood?`Bairro ${v.neighborhood}`:'',v.cep?`CEP ${v.cep}`:'',v.city,v.state].filter(Boolean).join(', ');
+  document.getElementById('printProperty').textContent=v.property||'Imóvel';
+  document.getElementById('printAddress').textContent=address||'Endereço não informado';
+  document.getElementById('printBuyer').textContent=`Interessado: ${v.clientName||'Não informado'}`;
+  document.getElementById('printDate').textContent=`Data da simulação: ${displayDate(v.analysisDate)}`;
+  const buyerPart=safeFilePart(v.clientName||'Cliente_nao_informado');
+  const suggestedName=id?`${buyerPart}_ID${id}.pdf`:`${buyerPart}_${v.analysisDate||todayISO()}.pdf`;
+  button.disabled=true;
+  button.textContent='Gerando PDF...';
+  let result;
+  if(window.desktopLicense?.generatePdf){
+   result=await window.desktopLicense.generatePdf(suggestedName);
+   if(!result||result.canceled)return;
+   if(!result.success)throw new Error(result.message||'Não foi possível gerar o PDF.');
+  } else {
+   const oldTitle=document.title;document.title=suggestedName.replace(/\.pdf$/i,'');document.activeElement?.blur();window.print();document.title=oldTitle;
+   result={success:true,filePath:null};
+  }
+  const status=document.getElementById('newAnalysisStatus');
+  if(status)status.textContent=`PDF gerado${result.filePath?` e aberto para revisão: ${result.filePath}`:''}.${isDirty()||!id?' Esta análise ainda tem alterações não salvas; use “Salvar” para registrá-la no histórico.':''}`;
+ } catch(err){
+  alert('Não foi possível gerar o PDF.\n\n'+(err.message||String(err)));
+ } finally {
+  button.disabled=false;button.textContent='Gerar PDF';
+ }
+});
+
+// Linha de base das alterações não salvas, definida após a inicialização completa.
+(function establishBaseline(){
+ const rec=activeAnalysisId?loadArchive().find(x=>String(x.id)===String(activeAnalysisId)):null;
+ if(rec)savedKey=stateKey({...LEGACY_DEFAULTS,...rec.values});
+ else if(restoredPristineKey!==null)savedKey=restoredPristineKey;
+ else savedKey=stateKey(readFields());
+ updateSaveState();
+})();
+// Fechamento da janela (desktop): o processo principal pergunta antes de encerrar.
+if(window.desktopApp?.onCloseRequested){
+ window.desktopApp.onCloseRequested(async()=>{
+  window.desktopApp.closeAck();
+  try{
+   if(await resolveUnsaved('fechar o RIMOB'))window.desktopApp.closeNow();else window.desktopApp.closeCancel();
+  }catch(e){window.desktopApp.closeCancel();}
+ });
+} else {
+ window.addEventListener('beforeunload',e=>{if(isDirty()){e.preventDefault();e.returnValue='';}});
+}
+function safeFilePart(value){
+ return String(value||'')
+   .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+   .replace(/[^a-zA-Z0-9]+/g,'_')
+   .replace(/^_+|_+$/g,'')
+   .slice(0,80);
+}
+CONFIG.fields.forEach(([k,,t])=>{const el=document.getElementById(k);if(el && t!=='calculatedMoney'){const refresh=()=>{const anyFilled=CONFIG.fields.some(([key])=>{const node=document.getElementById(key);return node&&node.value.trim()!=='';});if(!anyFilled)return;if((k==='price'||k==='rent')&&!applyingDynamicPrice){if(k==='price')originalPurchasePrice=parseMoney(el.value);if(k==='rent')originalMonthlyRent=parseMoney(el.value);resetDynamicInputs();}refreshDerivedFields();run();updateReportMeta(activeAnalysisId);saveLast();};el.addEventListener('change',refresh);el.addEventListener('input',refresh);}});
+
+/* RIMOB iPad Web: autenticação e licença. Configuração ausente não é inferida nem inventada. */
+const RIMOB_WEB_AUTH_CONFIG = {
+  supabaseUrl: 'https://mygleecxocmancfqwlid.supabase.co', // URL pública do projeto Supabase
+  supabaseAnonKey: 'sb_publishable_fxFFJOHg50-D1KQDh0aduA_V_24sByx' // chave publishable (pública); nunca service_role
+};
+const RIMOB_DEVICE_STORAGE='rimob_web_device_id_v1';
+const RIMOB_LICENSE_STORAGE='rimob_web_license_v1';
+const RIMOB_OFFLINE_STORAGE='rimob_web_last_online_validation_v1';
+const RIMOB_OFFLINE_GRACE_MS=7*24*60*60*1000;
+let rimobSupabase=null, rimobAuthUser=null, rimobGateBusy=false;
+const rimobGate=document.getElementById('rimobAuthGate'), rimobShell=document.getElementById('appShell');
+const rimobMsg=document.getElementById('rimobAuthMessage');
+function rimobMessage(text,type=''){rimobMsg.textContent=text||'';rimobMsg.className='rimob-auth-message'+(type?' '+type:'');}
+function rimobSetBusy(b){rimobGateBusy=!!b;['rimobLoginBtn','rimobActivateBtn','rimobRecoveryBtn'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=!!b;});}
+function rimobShowGate(show){rimobGate.hidden=!show;rimobShell.classList.toggle('auth-locked',show);rimobShell.style.visibility=show?'hidden':'visible';rimobShell.style.pointerEvents=show?'none':'auto';}
+function rimobConfigured(){return !!(RIMOB_WEB_AUTH_CONFIG.supabaseUrl.trim()&&RIMOB_WEB_AUTH_CONFIG.supabaseAnonKey.trim()&&window.supabase?.createClient);}
+function rimobClient(){if(!rimobConfigured())return null;if(!rimobSupabase)rimobSupabase=window.supabase.createClient(RIMOB_WEB_AUTH_CONFIG.supabaseUrl.trim(),RIMOB_WEB_AUTH_CONFIG.supabaseAnonKey.trim(),{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});return rimobSupabase;}
+function rimobDeviceId(){let id=localStorage.getItem(RIMOB_DEVICE_STORAGE);if(!id){id='rimob-'+(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2));localStorage.setItem(RIMOB_DEVICE_STORAGE,id);}return id;}
+async function rimobSha256(value){if(!window.crypto?.subtle)throw new Error('SHA-256/Web Crypto indisponível. Abra a página em HTTPS ou localhost.');const bytes=new TextEncoder().encode(String(value));const digest=await crypto.subtle.digest('SHA-256',bytes);return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,'0')).join('');}
+function rimobLicense(){try{return JSON.parse(localStorage.getItem(RIMOB_LICENSE_STORAGE)||'null')}catch(e){return null}}
+function rimobOfflineAllowed(){const ts=Number(localStorage.getItem(RIMOB_OFFLINE_STORAGE));return Number.isFinite(ts)&&ts>0&&Date.now()-ts<=RIMOB_OFFLINE_GRACE_MS;}
+function rimobRpcAccepted(data){if(data===true)return true;if(Array.isArray(data)&&data.length===1)return rimobRpcAccepted(data[0]);if(data&&typeof data==='object')return data.valid===true||data.success===true||data.active===true||data.allowed===true||data.licensed===true;return false;}
+function rimobRpcDeniedMessage(data){if(data&&typeof data==='object'&&typeof data.message==='string'&&data.message.trim())return data.message;if(data&&typeof data==='object'&&typeof data.error==='string'&&data.error.trim())return data.error;return 'O Supabase não confirmou a validade da licença para este dispositivo.';}
+async function rimobValidateOnline(codeHash,deviceHash){const client=rimobClient();if(!client)throw new Error('Configuração Supabase ausente no HTML. Preencha a URL e a chave pública do projeto.');const {data,error}=await client.rpc('validate_access_device',{p_code_hash:codeHash,p_device_hash:deviceHash});if(error)throw error;if(!rimobRpcAccepted(data))throw new Error(rimobRpcDeniedMessage(data));localStorage.setItem(RIMOB_OFFLINE_STORAGE,String(Date.now()));return true;}
+async function rimobUnlock(user,codeHash){rimobAuthUser=user;rimobShowGate(false);rimobMessage('Acesso validado.','success');run();}
+async function rimobStart(){
+ rimobShowGate(true);
+ if(!rimobConfigured()){rimobMessage('Supabase ainda não configurado neste arquivo. A URL e a chave anon/publicable não foram encontradas no HTML enviado. A calculadora permanece bloqueada.','error');return;}
+ const client=rimobClient();
+ try{
+  const {data:{session},error}=await client.auth.getSession();if(error)throw error;
+  if(!session?.user){rimobMessage('Entre com seu e-mail e senha para continuar.');return;}
+  rimobAuthUser=session.user;
+  const lic=rimobLicense();
+  if(!lic?.codeHash){rimobMessage('Sessão autenticada. Informe o Access Code para ativar a licença neste dispositivo.');return;}
+  const deviceHash=await rimobSha256(rimobDeviceId());
+  try{await rimobValidateOnline(lic.codeHash,deviceHash);await rimobUnlock(session.user,lic.codeHash);}
+  catch(err){const offlineError=(err&&(!err.status||err.status>=500||err.name==='TypeError'))||/fetch|network|conex|timeout/i.test(err?.message||'');if(offlineError&&rimobOfflineAllowed()){await rimobUnlock(session.user,lic.codeHash);rimobMessage('Supabase indisponível. Acesso liberado pela tolerância offline até 7 dias após a última validação online válida.','success');}else rimobMessage('Não foi possível validar a licença online. '+(err.message||''),'error');}
+ }catch(err){rimobMessage('Falha ao recuperar sessão: '+(err.message||String(err)),'error');}
+}
+document.getElementById('rimobLoginForm').addEventListener('submit',async ev=>{ev.preventDefault();if(rimobGateBusy)return;const client=rimobClient();if(!client){rimobMessage('Configuração Supabase ausente. URL e chave pública devem ser configuradas antes do login.','error');return;}rimobSetBusy(true);rimobMessage('Entrando…');try{const {data,error}=await client.auth.signInWithPassword({email:document.getElementById('rimobEmail').value.trim(),password:document.getElementById('rimobPassword').value});if(error)throw error;rimobAuthUser=data.user;const lic=rimobLicense();if(lic?.codeHash){const dev=await rimobSha256(rimobDeviceId());try{await rimobValidateOnline(lic.codeHash,dev);await rimobUnlock(data.user,lic.codeHash);}catch(e){const offlineError=(e&&(!e.status||e.status>=500||e.name==='TypeError'))||/fetch|network|conex|timeout/i.test(e?.message||'');if(offlineError&&rimobOfflineAllowed())await rimobUnlock(data.user,lic.codeHash);else rimobMessage('Login efetuado, mas a licença não foi validada: '+(e.message||''),'error');}}else rimobMessage('Login efetuado. Informe o Access Code e clique em Ativar licença.','success');}catch(e){rimobMessage('Não foi possível entrar: '+(e.message||'credenciais inválidas'),'error');}finally{rimobSetBusy(false);}});
+document.getElementById('rimobRecoveryBtn').addEventListener('click',async()=>{if(rimobGateBusy)return;const email=document.getElementById('rimobEmail').value.trim();if(!email){rimobMessage('Informe seu e-mail para solicitar a recuperação de senha.','error');return;}const client=rimobClient();if(!client){rimobMessage('Configuração Supabase ausente.','error');return;}rimobSetBusy(true);rimobMessage('Solicitando recuperação…');try{const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.href.split('#')[0]});if(error)throw error;rimobMessage('Se o e-mail estiver cadastrado, você receberá as instruções de recuperação.','success');}catch(e){rimobMessage('Falha ao solicitar recuperação: '+(e.message||''),'error');}finally{rimobSetBusy(false);}});
+document.getElementById('rimobActivateBtn').addEventListener('click',async()=>{if(rimobGateBusy)return;const client=rimobClient();if(!client){rimobMessage('Supabase não configurado. URL e chave pública são necessárias.','error');return;}const code=document.getElementById('rimobAccessCode').value.trim();if(!code){rimobMessage('Informe seu Access Code.','error');return;}rimobSetBusy(true);rimobMessage('Ativando e validando licença…');try{const {data:{session},error:sessionError}=await client.auth.getSession();if(sessionError)throw sessionError;if(!session?.user)throw new Error('Faça login antes de ativar a licença.');const codeHash=await rimobSha256(code);const deviceHash=await rimobSha256(rimobDeviceId());const {data,error}=await client.rpc('activate_access_code',{p_code_hash:codeHash,p_device_hash:deviceHash});if(error)throw error;if(!rimobRpcAccepted(data))throw new Error(rimobRpcDeniedMessage(data));localStorage.setItem(RIMOB_LICENSE_STORAGE,JSON.stringify({codeHash}));await rimobValidateOnline(codeHash,deviceHash);await rimobUnlock(session.user,codeHash);rimobMessage('Licença ativada e validada para este dispositivo.','success');}catch(e){rimobMessage('Ativação não confirmada: '+(e.message||String(e)),'error');}finally{rimobSetBusy(false);}});
+document.getElementById('logoutButton').addEventListener('click',async()=>{if(!rimobAuthUser)return;if(!await resolveUnsaved('sair da conta'))return;if(!confirm('Deseja realmente sair? O histórico e os dados locais da calculadora serão preservados.'))return;const client=rimobClient();const btn=document.getElementById('logoutButton');btn.disabled=true;try{const {error}=await client.auth.signOut();if(error)throw error;rimobAuthUser=null;rimobShowGate(true);rimobMessage('Sessão encerrada. Entre novamente para acessar a calculadora.','success');}catch(e){alert('Não foi possível sair: '+(e.message||String(e)));}finally{btn.disabled=false;}});
+if(rimobConfigured()){const client=rimobClient();client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){rimobAuthUser=null;rimobShowGate(true);rimobMessage('Sessão encerrada.');}});}
+// O estado inicial é sempre bloqueado; somente autenticação + licença válida libera a interface.
+rimobStart();
+</script></body></html>
