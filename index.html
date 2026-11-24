@@ -15,7 +15,8 @@ header .logout-button:hover{background:#edf2f7}
 main{width:100%;max-width:1280px;margin:22px auto;padding:0 18px 40px}.layout{display:grid;grid-template-columns:minmax(300px,360px) minmax(0,1fr);gap:18px;align-items:start}.layout>*,.panel{min-width:0}
 .panel{background:white;border:1px solid #dce4ec;border-radius:12px;padding:18px;box-shadow:0 3px 12px #20354b0b}.panel h2{font-size:18px;margin:0 0 14px;color:var(--navy)}
 .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.part4-percent{grid-column:1}.part4-calculated{grid-column:2}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted);font-weight:bold}
-input,select{width:100%;border:1px solid #cbd6e0;border-radius:7px;padding:10px;font:inherit;background:#fff;color:var(--text)}input[readonly]{background:#eef3f7;color:var(--navy);font-weight:bold}input:focus{outline:2px solid #8db9df;border-color:var(--blue)}
+input,select,textarea{width:100%;border:1px solid #cbd6e0;border-radius:7px;padding:10px;font:inherit;background:#fff;color:var(--text)}input[readonly]{background:#eef3f7;color:var(--navy);font-weight:bold}textarea{min-height:120px;resize:vertical;line-height:1.45}
+input:focus,textarea:focus{outline:2px solid #8db9df;border-color:var(--blue)}
 .actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}button{border:0;border-radius:7px;padding:10px 13px;font-weight:bold;cursor:pointer}button.primary{background:var(--blue);color:white}button.secondary{background:#e9eef3;color:var(--navy)}
 .dynamic-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.dynamic-grid .field{display:flex;flex-direction:column;gap:5px}.dynamic-grid label{font-size:12px;color:var(--muted);font-weight:bold}.dynamic-grid input,.dynamic-grid select{width:100%;border:1px solid #cbd6e0;border-radius:7px;padding:10px;font:inherit;background:#fff;color:var(--text)}.dynamic-grid input[readonly]{background:#eef3f7;font-weight:bold;color:var(--navy)}.dynamic-help{font-size:12px;color:var(--muted);margin:8px 0 0}.dynamic-status{font-size:13px;font-weight:bold;color:var(--navy);margin-top:10px}.results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.metric{border:1px solid #dce4ec;border-radius:10px;padding:14px;background:white;min-height:110px}.metric .label{font-size:12px;color:var(--muted);font-weight:bold}.metric .value{font-size:22px;font-weight:bold;color:var(--navy);margin:7px 0}.metric .note{font-size:12px;color:var(--muted)}
 .metric.good{background:var(--green)}.metric.bad{background:var(--red)}.section{margin-top:18px}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:right;padding:10px;border-bottom:1px solid #e2e8ef;white-space:nowrap}th{background:#edf2f7;color:var(--navy)}th:first-child,td:first-child{text-align:left}
@@ -92,6 +93,7 @@ th{white-space:normal;vertical-align:bottom;line-height:1.25;padding:10px 8px}td
   <div class="print-title">Estimativa de Retorno de Investimento em Imóvel</div>
   <div class="print-property" id="printProperty"></div>
   <div class="print-address" id="printAddress"></div>
+  <div class="print-address" id="printDescription" style="white-space:pre-line"></div>
   <div class="print-buyer" id="printBuyer"></div>
   <div class="print-date" id="printDate"></div>
 </div>
@@ -103,7 +105,7 @@ th{white-space:normal;vertical-align:bottom;line-height:1.25;padding:10px 8px}td
 <p class="small">IRPF do aluguel: informe outras rendas tributáveis mensais do locador antes do aluguel. O cálculo é uma estimativa baseada na tabela mensal do IRPF correspondente ao ano da data da análise (<span id="irpfTableInfo"></span>) e deve ser conferido na apuração fiscal individual, inclusive no Carnê-Leão e na declaração anual.</p></section>
 <section class="main-column">
 <div class="panel report-meta section" id="reportMeta"><h2>Identificação da análise</h2><dl id="reportMetaContent"></dl></div>
-<div class="panel section" id="dynamicAnalysis"><h2>Simulador dinâmico de aquisição</h2><p class="small">Informe o aluguel mensal alvo e a TIR anual desejada. O RIMOB calcula o preço máximo de compra e atualiza automaticamente o formulário e todas as projeções. Deixe as duas premissas em zero para restaurar o preço informado manualmente no formulário.</p><div class="dynamic-grid"><div class="field"><label for="dynamicRent">Aluguel mensal alvo (R$)</label><input id="dynamicRent" type="number" min="0" step="50" value="0" placeholder="0,00"></div><div class="field"><label for="dynamicTir">TIR desejada (% a.a.)</label><input id="dynamicTir" type="number" min="0" max="100" step="0.1" value="0" placeholder="0,00"></div><div class="field"><label for="dynamicPrice">Preço máximo de compra calculado (R$)</label><input id="dynamicPrice" type="text" readonly value="0,00" aria-label="Preço máximo de compra calculado automaticamente"></div></div><div id="dynamicStatus" class="dynamic-status" aria-live="polite"></div><p class="dynamic-help">O preço máximo é o maior preço de compra com o qual a TIR anual estimada do investimento atinge a TIR desejada, considerando todas as premissas do formulário: aluguel, despesas, IRPF, valorização, horizonte, financiamento e custos de venda. Por depender da valorização e do prazo informados, revise essas premissas. ITBI/ITIV, escritura e registro são recalculados automaticamente a partir do novo preço. As despesas percentuais da locação também são convertidas em valores mensais estimados conforme o aluguel vigente.</p></div><div class="results" id="results"></div>
+<div class="panel section" id="dynamicAnalysis"><h2>Simulador dinâmico de aquisição</h2><p class="small">Informe o aluguel mensal alvo e a TIR anual desejada. O RIMOB calcula o preço máximo de compra e atualiza automaticamente o formulário e todas as projeções. Deixe as duas premissas em zero para restaurar o preço informado manualmente no formulário.</p><div class="dynamic-grid"><div class="field"><label for="dynamicRent">Aluguel mensal alvo (R$)</label><input id="dynamicRent" type="text" inputmode="decimal" value="0" placeholder="0,00"></div><div class="field"><label for="dynamicTir">TIR desejada (% a.a.)</label><input id="dynamicTir" type="text" inputmode="decimal" value="0" placeholder="0,00"></div><div class="field"><label for="dynamicPrice">Preço máximo de compra calculado (R$)</label><input id="dynamicPrice" type="text" readonly value="0,00" aria-label="Preço máximo de compra calculado automaticamente"></div></div><div id="dynamicStatus" class="dynamic-status" aria-live="polite"></div><p class="dynamic-help">O preço máximo é o maior preço de compra com o qual a TIR anual estimada do investimento atinge a TIR desejada, considerando todas as premissas do formulário: aluguel, despesas, IRPF, valorização, horizonte, financiamento e custos de venda. Por depender da valorização e do prazo informados, revise essas premissas. ITBI/ITIV, escritura e registro são recalculados automaticamente a partir do novo preço. As despesas percentuais da locação também são convertidas em valores mensais estimados conforme o aluguel vigente.</p></div><div class="results" id="results"></div>
 <div class="panel section"><h2>Comparação no horizonte escolhido</h2><div class="tablewrap"><table id="comparison"></table></div></div>
 <div class="panel section"><h2>Fluxo de caixa anual estimado</h2><div class="tablewrap"><table id="cashflow"></table></div></div>
 <div class="panel section"><h2>Sensibilidade do aluguel mensal</h2><p class="small">Análise de sensibilidade do resultado para diferentes valores de aluguel mensal, calculados a partir da premissa informada. Compare as faixas apresentadas com imóveis de características semelhantes na região.</p><div class="tablewrap"><table id="rentSensitivity"></table></div></div>
@@ -141,7 +143,7 @@ const CONFIG = {
   "title":"RIMOB | Retorno de Investimento Imobiliário",
   "defaults":{
      "clientName":"","analystName":"","analysisDate":"2026-10-17",
-    "property":"Apartamento","address":"","neighborhood":"","cep":"","city":"Natal","state":"RN",
+    "property":"Apartamento","address":"","neighborhood":"","cep":"","city":"Natal","state":"RN","propertyDescription":"",
     "price":550000,"setup":10000,"rent":3000,"rentDiscountPct":3,
     "vacancyPct":5,"defaultPct":3,"managementPct":8,"vacancyAmount":0,"defaultAmount":0,"managementAmount":0,"rentDiscountAmount":0,"maintenanceAmount":0,"intermediationPct":100,"intermediationFee":0,"condoOwner":0,"propertyTax":1200,"insurance":600,
     "maintenancePct":0.5,"otherTaxableIncome":0,"rentGrowthPct":4,"appreciationPct":5,
@@ -154,6 +156,7 @@ const CONFIG = {
     ["property","Tipo de imóvel","select",["Apartamento","Casa","Terreno","Sala comercial","Loja","Galpão","Imóvel rural","Outro"]],
     ["address","Endereço do imóvel","text","text"],["neighborhood","Bairro","text","text"],["cep","CEP","cep"],
     ["city","Cidade","text","text"],["state","Estado (UF)","select",["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]],
+    ["propertyDescription","Descrição do imóvel","text","textarea"],
     ["price","Preço de compra negociado (R$)","money"],
     ["setup","Reforma, mobília e preparação (R$)","money"],
     ["itbiPct","ITBI / ITIV (%) · estimativa inicial editável","pct"],["itbi","Valor estimado do ITBI / ITIV (R$)","calculatedMoney"],
@@ -202,11 +205,12 @@ function renderFields(){
  'otherTaxableIncome':'5. Tributação estimada do aluguel (IRPF)'
  };
  if(sectionTitles[key]){currentSection=Number(key==='price'?1:key==='paymentMethod'?2:key==='downPaymentPct'?3:key==='rent'?4:5);const h=document.createElement('div');h.className='field full';h.innerHTML='<h3 style="margin:14px 0 2px;color:#17365d;font-size:15px;border-bottom:1px solid #dce4ec;padding-bottom:6px">'+sectionTitles[key]+'</h3>';box.append(h);}
- const d=document.createElement('div');d.className='field'+(['clientName','analystName','analysisDate','property','address','benchmarkDescription','rent','otherTaxableIncome'].includes(key)?' full':'');
+ const d=document.createElement('div');d.className='field'+(['clientName','analystName','analysisDate','property','address','propertyDescription','benchmarkDescription','rent','otherTaxableIncome'].includes(key)?' full':'');
  if(currentSection===4&&type==='pct')d.classList.add('part4-percent');
  if(currentSection===4&&type==='calculatedMoney')d.classList.add('part4-calculated');
  const l=document.createElement('label');l.htmlFor=key;l.textContent=label;let i;
  if(type==='select'){i=document.createElement('select');(options||[]).forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;i.append(o);});}
+ else if(options==='textarea'){i=document.createElement('textarea');i.rows=5;i.maxLength=1000;i.placeholder='Ex.: 3 quartos (1 suíte), 2 banheiros, 1 vaga, 85 m², andar alto, varanda, condomínio com piscina e portaria 24h.';}
  else {i=document.createElement('input');i.type=(type==='text'||type==='cep'||type==='money'||type==='pct'||type==='calculatedMoney')?'text':type==='date'?'text':'number';if(type==='money'||type==='pct'||type==='calculatedMoney'){i.inputMode='decimal';i.placeholder=type==='pct'?'0,0':'0,00';}if(type==='calculatedMoney'){i.readOnly=true;i.setAttribute('aria-label',label+' calculado automaticamente');}if(type==='cep'){i.inputMode='numeric';i.maxLength=10;i.placeholder='00.000-000';}if(type==='date'){i.inputMode='numeric';i.maxLength=10;i.placeholder='dd/mm/aaaa';const dv=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value');const toBr=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?`${m[3]}/${m[2]}/${m[1]}`:(s||'');};const toIso=s=>{const m=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s||'');if(!m)return '';const d=new Date(+m[3],+m[2]-1,+m[1]);return(d.getFullYear()===+m[3]&&d.getMonth()===+m[2]-1&&d.getDate()===+m[1])?`${m[3]}-${m[2]}-${m[1]}`:'';};Object.defineProperty(i,'value',{get(){return toIso(dv.get.call(i));},set(x){dv.set.call(i,toBr(x));},configurable:true});i.addEventListener('input',()=>{const t=dv.get.call(i).replace(/\D/g,'').slice(0,8);dv.set.call(i,t.length>4?`${t.slice(0,2)}/${t.slice(2,4)}/${t.slice(4)}`:t.length>2?`${t.slice(0,2)}/${t.slice(2)}`:t);});}if(type==='number'){i.step='1';i.min=1;i.max=35;}}
  i.id=key;i.value=CONFIG.defaults[key];d.append(l,i);box.append(d);});
 }
@@ -309,6 +313,7 @@ async function serverCall(body){
  const client=rimobClient(),lic=rimobLicense();
  if(!client||!lic||!lic.codeHash||!rimobAuthUser)throw new Error('Faça login para calcular.');
  const deviceHash=await rimobSha256(rimobDeviceId());
+ if(body.values){body={...body,values:{...body.values}};delete body.values.propertyDescription;}
  const {data,error}=await client.functions.invoke('calcular',{body:{...body,codeHash:lic.codeHash,deviceHash}});
  if(error){let j=null;try{j=await error.context.json();}catch(e){}
   throw Object.assign(new Error((j&&j.error)||'Não foi possível calcular. Verifique a conexão.'),{code:j&&j.code});}
@@ -340,7 +345,7 @@ async function runNow(){
  }
 }
 function updateDynamicAnalysis(){clearTimeout(dynTimer);dynTimer=setTimeout(updateDynamicAnalysisNow,500);}
-function dynamicNumber(id){const n=Number(document.getElementById(id).value);return Number.isFinite(n)?n:0;}
+function dynamicNumber(id){const value=document.getElementById(id).value;const n=id==='dynamicRent'?parseMoney(value):parseLocaleNumber(value);return Number.isFinite(n)?n:0;}
 function setActivePurchasePrice(value){
  const priceEl=document.getElementById('price');
  applyingDynamicPrice=true;
@@ -410,7 +415,7 @@ function initializeDynamicAnalysis(){
  if(originalPurchasePrice===null)originalPurchasePrice=parseMoney(document.getElementById('price')?.value||0);
  if(originalMonthlyRent===null)originalMonthlyRent=parseMoney(document.getElementById('rent')?.value||0);
  syncDynamicFromBase();
- ['dynamicRent','dynamicTir'].forEach(id=>document.getElementById(id).addEventListener('input',updateDynamicAnalysis));
+ ['dynamicRent','dynamicTir'].forEach(id=>{const input=document.getElementById(id);input.addEventListener('input',updateDynamicAnalysis);input.addEventListener('blur',()=>{if(id==='dynamicRent')input.value=formatMoneyInput(input.value);else input.value=formatPctInput(input.value);updateDynamicAnalysis();});});
 }
 const STORAGE_LAST='imob_analysis_last_v2';
 const STORAGE_ARCHIVE='imob_analysis_archive_v2';
@@ -439,7 +444,7 @@ function updateSaveState(){
 }
 function todayISO(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function readFields(){const v={};CONFIG.fields.forEach(([k,,t])=>{const el=document.getElementById(k);v[k]=el?el.value:'';});return v;}
-function applyFields(values){CONFIG.fields.forEach(([k,,t,opts])=>{const el=document.getElementById(k);if(el && values && values[k]!==undefined){el.value=values[k];if(t==='money')el.value=formatMoneyInput(el.value);if(t==='pct')el.value=formatPctInput(el.value);if(t==='cep')el.value=maskCep(el.value);}});if(values && values.vacancyPct!==undefined && values.defaultPct===undefined){const el=document.getElementById('defaultPct');if(el)el.value='0';}if(values && values.intermediationPct===undefined){const el=document.getElementById('intermediationPct');if(el)el.value='100';}}
+function applyFields(values){CONFIG.fields.forEach(([k,,t,opts])=>{const el=document.getElementById(k);if(el && values && values[k]!==undefined){el.value=values[k];if(t==='money')el.value=formatMoneyInput(el.value);if(t==='pct')el.value=formatPctInput(el.value);if(t==='cep')el.value=maskCep(el.value);}});if(values && values.vacancyPct!==undefined && values.defaultPct===undefined){const el=document.getElementById('defaultPct');if(el)el.value='0';}if(values && values.propertyDescription===undefined){const el=document.getElementById('propertyDescription');if(el)el.value='';}if(values && values.intermediationPct===undefined){const el=document.getElementById('intermediationPct');if(el)el.value='100';}}
 function saveLast(){try{localStorage.setItem(STORAGE_LAST,JSON.stringify({values:readFields(),activeAnalysisId,originalPurchasePrice,originalMonthlyRent}));}catch(e){}updateSaveState();}
 function loadArchive(){try{return JSON.parse(localStorage.getItem(STORAGE_ARCHIVE)||'[]')}catch(e){return []}}
 function saveArchive(list){try{localStorage.setItem(STORAGE_ARCHIVE,JSON.stringify(list));return true;}catch(e){alert('Não foi possível armazenar a análise. O armazenamento local do navegador pode estar cheio ou bloqueado.');return false;}}
@@ -459,7 +464,8 @@ function updateReportMeta(id){
  ['Nome do cliente',v.clientName||'Não informado'],
  ['Nome do analista',v.analystName||'Não informado'],
  ['Tipo de imóvel',v.property||'Não informado'],
- ['Endereço completo',address||'Não informado']
+ ['Endereço completo',address||'Não informado'],
+  ['Descrição do imóvel',v.propertyDescription||'Não informado']
  ];
  const target=document.getElementById('reportMetaContent');
  if(target)target.innerHTML=data.map(([k,val])=>`<div class="meta-item"><dt>${esc(k)}</dt><dd>${esc(val)}</dd></div>`).join('');
@@ -624,6 +630,7 @@ document.getElementById('print').addEventListener('click',async()=>{
   const address=[v.address,v.neighborhood?`Bairro ${v.neighborhood}`:'',v.cep?`CEP ${v.cep}`:'',v.city,v.state].filter(Boolean).join(', ');
   document.getElementById('printProperty').textContent=v.property||'Imóvel';
   document.getElementById('printAddress').textContent=address||'Endereço não informado';
+   {const pd=document.getElementById('printDescription');pd.textContent=v.propertyDescription||'';pd.style.display=v.propertyDescription?'':'none';}
   document.getElementById('printBuyer').textContent=`Interessado: ${v.clientName||'Não informado'}`;
   document.getElementById('printDate').textContent=`Data da simulação: ${displayDate(v.analysisDate)}`;
   const buyerPart=safeFilePart(v.clientName||'Cliente_nao_informado');
