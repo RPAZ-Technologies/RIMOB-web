@@ -363,7 +363,7 @@ function parseDynamicRent(value){
  }
  return Number(raw)||0;
 }
-const formatDynamicRent=s=>{const n=parseDynamicRent(s);return s===''?'':new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);};
+const formatDynamicRent=s=>{const n=parseDynamicRent(s);return s===''?'':new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);};
 function dynamicNumber(id){const value=document.getElementById(id).value;const n=id==='dynamicRent'?parseDynamicRent(value):parseLocaleNumber(value);return Number.isFinite(n)?n:0;}
 function setActivePurchasePrice(value){
  const priceEl=document.getElementById('price');
