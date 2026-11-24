@@ -82,6 +82,7 @@ th{white-space:normal;vertical-align:bottom;line-height:1.25;padding:10px 8px}td
 #appShell.auth-locked{visibility:hidden;pointer-events:none}
 #rimobAuthGate{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;padding:18px;background:linear-gradient(135deg,#122c4a,#1f4e78);font-family:Arial,Helvetica,sans-serif;overflow:auto}
 #rimobAuthGate[hidden]{display:none!important}
+#rimobSignupPanel[hidden],#rimobLoginForm[hidden],#rimobSignupOpenArea[hidden],#rimobLicenseArea[hidden],.rimob-auth-actions[hidden],.rimob-auth-hint[hidden],.rimob-auth-copyright[hidden]{display:none!important}
 .rimob-auth-card{width:min(100%,440px);background:#fff;border-radius:16px;padding:24px;box-shadow:0 18px 55px #07182a55;color:#243244}
 .rimob-auth-brand{font-weight:800;letter-spacing:.5px;font-size:27px;color:#17365d;margin-bottom:3px}.rimob-auth-sub{font-size:13px;color:#637487;margin-bottom:20px}
 .rimob-auth-card h2{margin:0 0 14px;color:#17365d;font-size:19px}.rimob-auth-field{display:flex;flex-direction:column;gap:6px;margin:12px 0}.rimob-auth-field label{font-size:12px;font-weight:bold;color:#637487}.rimob-auth-field input{min-height:46px;font-size:16px;border:1px solid #cbd6e0;border-radius:8px;padding:12px;box-sizing:border-box;width:100%}.rimob-secret-wrap{position:relative;display:flex;align-items:center}.rimob-secret-wrap input{padding-right:48px}.rimob-secret-toggle{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:transparent;color:#637487;padding:5px;border-radius:6px}.rimob-secret-toggle:hover{background:#edf2f7}.rimob-secret-toggle svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.rimob-secret-toggle[data-visible="true"] svg{opacity:.85}.rimob-auth-copyright{text-align:center;font-size:10px;color:#637487;margin-top:12px;padding-top:10px;border-top:1px solid #e2e8ef;line-height:1.45}
@@ -130,6 +131,17 @@ th{white-space:normal;vertical-align:bottom;line-height:1.25;padding:10px 8px}td
    <div class="rimob-auth-field"><label for="rimobPassword">Senha</label><div class="rimob-secret-wrap"><input id="rimobPassword" type="password" autocomplete="current-password" required><button class="rimob-secret-toggle" type="button" data-toggle-secret="rimobPassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
    <div class="rimob-auth-actions"><button class="primary" id="rimobLoginBtn" type="submit">Entrar</button><button class="rimob-auth-secondary" id="rimobRecoveryBtn" type="button">Recuperar senha</button></div>
   </form>
+  <div class="rimob-auth-actions" id="rimobSignupOpenArea"><button class="rimob-auth-secondary" id="rimobSignupOpenBtn" type="button">Criar nova conta</button></div>
+  <section id="rimobSignupPanel" hidden aria-label="Cadastro de novo usuário">
+   <h3 style="margin:16px 0 8px;color:#17365d;font-size:16px">Criar nova conta</h3>
+   <form id="rimobSignupForm">
+    <div class="rimob-auth-field"><label for="rimobSignupName">Nome</label><input id="rimobSignupName" type="text" autocomplete="name" required></div>
+    <div class="rimob-auth-field"><label for="rimobSignupEmail">E-mail</label><input id="rimobSignupEmail" type="email" autocomplete="email" required inputmode="email"></div>
+    <div class="rimob-auth-field"><label for="rimobSignupPassword">Criar senha</label><div class="rimob-secret-wrap"><input id="rimobSignupPassword" type="password" autocomplete="new-password" required><button class="rimob-secret-toggle" type="button" data-toggle-secret="rimobSignupPassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <div class="rimob-auth-field"><label for="rimobSignupConfirm">Confirmar senha</label><div class="rimob-secret-wrap"><input id="rimobSignupConfirm" type="password" autocomplete="new-password" required><button class="rimob-secret-toggle" type="button" data-toggle-secret="rimobSignupConfirm" aria-label="Mostrar confirmação de senha" title="Mostrar confirmação de senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <div class="rimob-auth-actions"><button class="primary" id="rimobSignupSubmit" type="submit">Criar conta</button><button class="rimob-auth-secondary" id="rimobSignupCancel" type="button">Voltar ao login</button></div>
+   </form>
+  </section>
   <div class="rimob-auth-field" id="rimobLicenseArea"><label for="rimobAccessCode">Access Code / Código de licença</label><div class="rimob-secret-wrap"><input id="rimobAccessCode" type="password" autocomplete="off" autocapitalize="off"><button class="rimob-secret-toggle" type="button" data-toggle-secret="rimobAccessCode" aria-label="Mostrar código de licença" title="Mostrar código de licença"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
   <div class="rimob-auth-actions"><button class="primary" id="rimobActivateBtn" type="button">Ativar licença</button></div>
   <div id="rimobAuthMessage" class="rimob-auth-message" role="status" aria-live="polite"></div>
@@ -209,7 +221,7 @@ function renderFields(){
  if(currentSection===4&&type==='pct')d.classList.add('part4-percent');
  if(currentSection===4&&type==='calculatedMoney')d.classList.add('part4-calculated');
  const l=document.createElement('label');l.htmlFor=key;l.textContent=label;let i;
- if(type==='select'){i=document.createElement('select');(options||[]).forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;i.append(o);});}
+ if(type==='select'){i=document.createElement('select');if(key!=='property'){const blank=document.createElement('option');blank.value='';blank.textContent='';i.append(blank);}(options||[]).forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;i.append(o);});}
  else if(options==='textarea'){i=document.createElement('textarea');i.rows=5;i.maxLength=1000;i.placeholder='Ex.: 3 quartos (1 suíte), 2 banheiros, 1 vaga, 85 m², andar alto, varanda, condomínio com piscina e portaria 24h.';}
  else {i=document.createElement('input');i.type=(type==='text'||type==='cep'||type==='money'||type==='pct'||type==='calculatedMoney')?'text':type==='date'?'text':'number';if(type==='money'||type==='pct'||type==='calculatedMoney'){i.inputMode='decimal';i.placeholder=type==='pct'?'0,0':'0,00';}if(type==='calculatedMoney'){i.readOnly=true;i.setAttribute('aria-label',label+' calculado automaticamente');}if(type==='cep'){i.inputMode='numeric';i.maxLength=10;i.placeholder='00.000-000';}if(type==='date'){i.inputMode='numeric';i.maxLength=10;i.placeholder='dd/mm/aaaa';const dv=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value');const toBr=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?`${m[3]}/${m[2]}/${m[1]}`:(s||'');};const toIso=s=>{const m=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s||'');if(!m)return '';const d=new Date(+m[3],+m[2]-1,+m[1]);return(d.getFullYear()===+m[3]&&d.getMonth()===+m[2]-1&&d.getDate()===+m[1])?`${m[3]}-${m[2]}-${m[1]}`:'';};Object.defineProperty(i,'value',{get(){return toIso(dv.get.call(i));},set(x){dv.set.call(i,toBr(x));},configurable:true});i.addEventListener('input',()=>{const t=dv.get.call(i).replace(/\D/g,'').slice(0,8);dv.set.call(i,t.length>4?`${t.slice(0,2)}/${t.slice(2,4)}/${t.slice(4)}`:t.length>2?`${t.slice(0,2)}/${t.slice(2)}`:t);});}if(type==='number'){i.step='1';i.min=1;i.max=35;}}
  i.id=key;i.value=CONFIG.defaults[key];d.append(l,i);box.append(d);});
@@ -602,22 +614,28 @@ async function newAnalysis(){
   const previous=readFields();
   const preservedBuyer=previous.clientName||'';
   const preservedAnalyst=previous.analystName||'';
+  const preservedProperty=previous.property||CONFIG.defaults.property||'Apartamento';
   activeAnalysisId=null;
-  originalPurchasePrice=Number(CONFIG.defaults.price)||0;
-  originalMonthlyRent=Number(CONFIG.defaults.rent)||0;
-  const next={...CONFIG.defaults,clientName:preservedBuyer,analystName:preservedAnalyst,analysisDate:todayISO()};
+  originalPurchasePrice=0;
+  originalMonthlyRent=0;
+  const next={};
+  CONFIG.fields.forEach(([key])=>{next[key]='';});
+  next.clientName=preservedBuyer;
+  next.analystName=preservedAnalyst;
+  next.analysisDate=todayISO();
+  next.property=preservedProperty;
   applyFields(next);
-  refreshDerivedFields();
-  if(typeof syncDynamicFromBase==='function')syncDynamicFromBase();
-  run();
+  // Campos calculados também ficam vazios até que o usuário informe premissas.
+  CONFIG.fields.forEach(([key,,type])=>{if(type==='calculatedMoney'){const el=document.getElementById(key);if(el)el.value='';}});
+  ['dynamicRent','dynamicTir','dynamicPrice'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const dynamicStatus=document.getElementById('dynamicStatus');if(dynamicStatus)dynamicStatus.textContent='';
+  clearResults();
   updateReportMeta(null);
   markClean();
   saveLast();
   renderArchive();
   const status=document.getElementById('newAnalysisStatus');
-  if(status)status.textContent=preservedBuyer
-    ? `Nova análise iniciada. Os dados do comprador (${preservedBuyer}) e do analista foram mantidos; informe os dados do novo imóvel.`
-    : 'Nova análise iniciada. Informe os dados do comprador, analista e imóvel.';
+  if(status)status.textContent='Nova análise iniciada. As premissas estão vazias; preencha os dados do novo imóvel.';
   window.scrollTo(0,0);
  } catch(err) {
   alert('Não foi possível iniciar uma nova análise: '+err.message);
@@ -715,7 +733,7 @@ let rimobSupabase=null, rimobAuthUser=null, rimobGateBusy=false;
 const rimobGate=document.getElementById('rimobAuthGate'), rimobShell=document.getElementById('appShell');
 const rimobMsg=document.getElementById('rimobAuthMessage');
 function rimobMessage(text,type=''){rimobMsg.textContent=text||'';rimobMsg.className='rimob-auth-message'+(type?' '+type:'');}
-function rimobSetBusy(b){rimobGateBusy=!!b;['rimobLoginBtn','rimobActivateBtn','rimobRecoveryBtn'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=!!b;});}
+function rimobSetBusy(b){rimobGateBusy=!!b;['rimobLoginBtn','rimobActivateBtn','rimobRecoveryBtn','rimobSignupSubmit','rimobSignupOpenBtn','rimobSignupCancel'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=!!b;});}
 function rimobShowGate(show){rimobGate.hidden=!show;rimobShell.classList.toggle('auth-locked',show);rimobShell.style.visibility=show?'hidden':'visible';rimobShell.style.pointerEvents=show?'none':'auto';}
 function rimobConfigured(){return !!(RIMOB_WEB_AUTH_CONFIG.supabaseUrl.trim()&&RIMOB_WEB_AUTH_CONFIG.supabaseAnonKey.trim()&&window.supabase?.createClient);}
 function rimobClient(){if(!rimobConfigured())return null;if(!rimobSupabase)rimobSupabase=window.supabase.createClient(RIMOB_WEB_AUTH_CONFIG.supabaseUrl.trim(),RIMOB_WEB_AUTH_CONFIG.supabaseAnonKey.trim(),{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});return rimobSupabase;}
@@ -743,6 +761,46 @@ async function rimobStart(){
  }catch(err){rimobMessage('Falha ao recuperar sessão: '+(err.message||String(err)),'error');}
 }
 document.querySelectorAll('[data-toggle-secret]').forEach(btn=>{btn.addEventListener('click',()=>{const input=document.getElementById(btn.dataset.toggleSecret);if(!input)return;const show=input.type==='password';input.type=show?'text':'password';btn.dataset.visible=show?'true':'false';btn.setAttribute('aria-label',show?'Ocultar conteúdo':'Mostrar conteúdo');btn.title=show?'Ocultar conteúdo':'Mostrar conteúdo';});});
+function rimobSetSignupMode(show){
+ const loginForm=document.getElementById('rimobLoginForm');
+ const signupPanel=document.getElementById('rimobSignupPanel');
+ const openArea=document.getElementById('rimobSignupOpenArea');
+ const licenseArea=document.getElementById('rimobLicenseArea');
+ const activateBtn=document.getElementById('rimobActivateBtn')?.parentElement;
+ const hint=document.querySelector('.rimob-auth-hint');
+ const copyright=document.querySelector('.rimob-auth-copyright');
+ if(loginForm)loginForm.hidden=!!show;
+ if(signupPanel)signupPanel.hidden=!show;
+ if(openArea)openArea.hidden=!!show;
+ if(licenseArea)licenseArea.hidden=!!show;
+ if(activateBtn)activateBtn.hidden=!!show;
+ if(hint)hint.hidden=!!show;
+ if(copyright)copyright.hidden=!!show;
+ rimobMessage(show?'Preencha os dados para criar sua conta.':'');
+}
+document.getElementById('rimobSignupOpenBtn').addEventListener('click',()=>rimobSetSignupMode(true));
+document.getElementById('rimobSignupCancel').addEventListener('click',()=>rimobSetSignupMode(false));
+document.getElementById('rimobSignupForm').addEventListener('submit',async ev=>{
+ ev.preventDefault();if(rimobGateBusy)return;
+ const name=document.getElementById('rimobSignupName').value.trim();
+ const email=document.getElementById('rimobSignupEmail').value.trim();
+ const password=document.getElementById('rimobSignupPassword').value;
+ const confirmPassword=document.getElementById('rimobSignupConfirm').value;
+ if(password!==confirmPassword){rimobMessage('As senhas não coincidem.','error');return;}
+ const client=rimobClient();if(!client){rimobMessage('Configuração Supabase ausente.','error');return;}
+ rimobSetBusy(true);rimobMessage('Criando conta…');
+ try{
+  const {data,error}=await client.auth.signUp({email,password,options:{data:{full_name:name,name},emailRedirectTo:location.href.split('#')[0]}});
+  if(error)throw error;
+  if(data?.session){
+   rimobMessage('Conta criada com sucesso. Agora faça login e ative sua licença com o Access Code.','success');
+  }else{
+   rimobMessage('Conta criada. Verifique seu e-mail para confirmar o cadastro e, depois, entre e ative sua licença.','success');
+  }
+  document.getElementById('rimobSignupForm').reset();
+ }catch(e){rimobMessage('Não foi possível criar a conta: '+(e.message||String(e)),'error');}
+ finally{rimobSetBusy(false);}
+});
 document.getElementById('rimobLoginForm').addEventListener('submit',async ev=>{ev.preventDefault();if(rimobGateBusy)return;const client=rimobClient();if(!client){rimobMessage('Configuração Supabase ausente. URL e chave pública devem ser configuradas antes do login.','error');return;}rimobSetBusy(true);rimobMessage('Entrando…');try{const {data,error}=await client.auth.signInWithPassword({email:document.getElementById('rimobEmail').value.trim(),password:document.getElementById('rimobPassword').value});if(error)throw error;rimobAuthUser=data.user;const lic=rimobLicense();if(lic?.codeHash){const dev=await rimobSha256(rimobDeviceId());try{await rimobValidateOnline(lic.codeHash,dev);await rimobUnlock(data.user,lic.codeHash);}catch(e){const offlineError=(e&&(!e.status||e.status>=500||e.name==='TypeError'))||/fetch|network|conex|timeout/i.test(e?.message||'');if(offlineError&&rimobOfflineAllowed())await rimobUnlock(data.user,lic.codeHash);else rimobMessage('Login efetuado, mas a licença não foi validada: '+(e.message||''),'error');}}else rimobMessage('Login efetuado. Informe o Access Code e clique em Ativar licença.','success');}catch(e){rimobMessage('Não foi possível entrar: '+(e.message||'credenciais inválidas'),'error');}finally{rimobSetBusy(false);}});
 document.getElementById('rimobRecoveryBtn').addEventListener('click',async()=>{if(rimobGateBusy)return;const email=document.getElementById('rimobEmail').value.trim();if(!email){rimobMessage('Informe seu e-mail para solicitar a recuperação de senha.','error');return;}const client=rimobClient();if(!client){rimobMessage('Configuração Supabase ausente.','error');return;}rimobSetBusy(true);rimobMessage('Solicitando recuperação…');try{const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.href.split('#')[0]});if(error)throw error;rimobMessage('Se o e-mail estiver cadastrado, você receberá as instruções de recuperação.','success');}catch(e){rimobMessage('Falha ao solicitar recuperação: '+(e.message||''),'error');}finally{rimobSetBusy(false);}});
 document.getElementById('rimobActivateBtn').addEventListener('click',async()=>{if(rimobGateBusy)return;const client=rimobClient();if(!client){rimobMessage('Supabase não configurado. URL e chave pública são necessárias.','error');return;}const code=document.getElementById('rimobAccessCode').value.trim();if(!code){rimobMessage('Informe seu Access Code.','error');return;}rimobSetBusy(true);rimobMessage('Ativando e validando licença…');try{const {data:{session},error:sessionError}=await client.auth.getSession();if(sessionError)throw sessionError;if(!session?.user)throw new Error('Faça login antes de ativar a licença.');const codeHash=await rimobSha256(code);const deviceHash=await rimobSha256(rimobDeviceId());const {data,error}=await client.rpc('activate_access_code',{p_code_hash:codeHash,p_device_hash:deviceHash});if(error)throw error;if(!rimobRpcAccepted(data))throw new Error(rimobRpcDeniedMessage(data));localStorage.setItem(RIMOB_LICENSE_STORAGE,JSON.stringify({codeHash}));await rimobValidateOnline(codeHash,deviceHash);await rimobUnlock(session.user,codeHash);rimobMessage('Licença ativada e validada para este dispositivo.','success');}catch(e){rimobMessage('Ativação não confirmada: '+(e.message||String(e)),'error');}finally{rimobSetBusy(false);}});
